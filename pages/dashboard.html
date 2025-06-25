@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Mantenimiento</title>
+    <link rel="stylesheet" href="/Styles/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Barra de navegación horizontal -->
+    <nav class="navbar">
+        <div class="navbar-brand">Dashboard de Mantenimiento</div>
+        <ul class="navbar-menu">
+            <li class="active">INICIO</li>
+            <li>EQUIPOS</li>
+            <li>MANTENIMIENTOS</li>
+            <li>REPORTES</li>
+            <li>USUARIOS</li>
+        </ul>
+        <div class="navbar-notifications">
+            <button class="notification-btn">Notificaciones <span class="badge">3</span></button>
+            <div class="notification-dropdown">
+                <div class="notification-item">Mantenimiento preventivo para Equipo A</div>
+                <div class="notification-item">Alerta crítica en Equipo B</div>
+                <div class="notification-item">Nuevo mantenimiento programado</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Primera fila de widgets -->
+        <div class="row">
+            <!-- Dispositivos Activos -->
+            <div class="card">
+                <h3>Dispositivos Activos</h3>
+                <div class="active-devices">
+                    <div class="device online">
+                        <span class="device-name">Equipo A</span>
+                        <span class="device-status">En operación</span>
+                    </div>
+                    <div class="device online">
+                        <span class="device-name">Equipo B</span>
+                        <span class="device-status">En operación</span>
+                    </div>
+                    <div class="device offline">
+                        <span class="device-name">Equipo C</span>
+                        <span class="device-status">Inactivo</span>
+                    </div>
+                    <div class="device online">
+                        <span class="device-name">Equipo D</span>
+                        <span class="device-status">En operación</span>
+                    </div>
+                    <div class="device warning">
+                        <span class="device-name">Equipo E</span>
+                        <span class="device-status">Advertencia</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mantenimientos Hoy -->
+            <div class="card">
+                <h3>Mantenimientos Hoy</h3>
+                <div class="maintenance-today">
+                    <div class="maintenance-item">
+                        <span class="time">08:00 AM</span>
+                        <span class="description">Revisión preventiva</span>
+                        <span class="equipo">Equipo A</span>
+                    </div>
+                    <div class="maintenance-item">
+                        <span class="time">10:30 AM</span>
+                        <span class="description">Cambio de piezas</span>
+                        <span class="equipo">Equipo B</span>
+                    </div>
+                    <div class="maintenance-item">
+                        <span class="time">02:00 PM</span>
+                        <span class="description">Calibración</span>
+                        <span class="equipo">Equipo D</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alertas Críticas -->
+            <div class="card critical-alerts">
+                <h3>Alertas Críticas</h3>
+                <div class="alert-item">
+                    <span class="alert-type">Error</span>
+                    <span class="alert-message">Sobrecalentamiento en Equipo B</span>
+                </div>
+                <div class="alert-item">
+                    <span class="alert-type">Falla</span>
+                    <span class="alert-message">Sensor dañado en Equipo C</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Segunda fila -->
+        <div class="row">
+            <!-- Próximos Mantenimientos -->
+            <div class="card table-card">
+                <h3>Próximos Mantenimientos</h3>
+                <table class="maintenance-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Técnico</th>
+                            <th>Equipo</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>15/06/2023</td>
+                            <td>Juan Pérez</td>
+                            <td>EQ-102</td>
+                            <td>Preventivo</td>
+                        </tr>
+                        <tr>
+                            <td>17/06/2023</td>
+                            <td>María Gómez</td>
+                            <td>EQ-205</td>
+                            <td>Correctivo</td>
+                        </tr>
+                        <tr>
+                            <td>20/06/2023</td>
+                            <td>Carlos Ruiz</td>
+                            <td>EQ-301</td>
+                            <td>Calibración</td>
+                        </tr>
+                        <tr>
+                            <td>22/06/2023</td>
+                            <td>Ana López</td>
+                            <td>EQ-110</td>
+                            <td>Preventivo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tercera fila -->
+        <div class="row">
+            <!-- Gráfico de Mantenimientos -->
+            <div class="card chart-card">
+                <h3>Mantenimientos por Mes</h3>
+                <canvas id="maintenanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración del gráfico
+        const ctx = document.getElementById('maintenanceChart').getContext('2d');
+        const maintenanceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Mantenimientos realizados',
+                    data: [12, 19, 15, 8, 14, 7],
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Mostrar/ocultar notificaciones
+        document.querySelector('.notification-btn').addEventListener('click', function() {
+            document.querySelector('.notification-dropdown').classList.toggle('show');
+        });
+    </script>
+</body>
+</html>
