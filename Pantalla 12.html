@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Usuarios</title>
+    <style>
+        /* Reset de estilos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Barra de navegación superior */
+        nav {
+            background-color: #2c3e50;
+            padding: 10px 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            justify-content: start;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        nav ul li a.active {
+            color: #2c3e50;
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-section {
+            width: 60%;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .error-message {
+            color: #cc0000;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .valid-icon {
+            color: #00aa00;
+            font-weight: bold;
+            display: none;
+            margin-left: 5px;
+        }
+
+        .photo-section {
+            width: 30%;
+            text-align: center;
+        }
+
+        .user-photo {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .photo-section button {
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .create-button, .back-button {
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .create-button[disabled] {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .create-button {
+            background-color: #27ae60;
+        }
+
+        .back-button {
+            background-color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de navegación -->
+    <nav>
+        <ul>
+            <li><a href="#" class="active">Dashboard</a></li>
+            <li><a href="#">INICIO</a></li>
+            <li><a href="#">EQUIPOS</a></li>
+            <li><a href="#">MANTENIMIENTOS</a></li>
+            <li><a href="#">REPORTES</a></li>
+            <li><a href="#">USUARIOS</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <h2>Ingrese la información requerida*</h2>
+
+        <form id="formulario">
+            <!-- Sección izquierda: Campos de texto -->
+            <div class="form-section">
+                <label for="nombreUsuario">Nombre del usuario *</label>
+                <input type="text" id="nombreUsuario" placeholder="String(45)*">
+                <span class="error-message" id="error-nombre"></span>
+                <span class="valid-icon" id="icon-nombre">&#10004;</span>
+
+                <label for="correo">Correo *</label>
+                <input type="email" id="correo" placeholder="usuario@dominio.com">
+                <span class="error-message" id="error-correo"></span>
+                <span class="valid-icon" id="icon-correo">&#10004;</span>
+
+                <label for="telefono">Teléfono</label>
+                <input type="text" id="telefono" placeholder="(XXX) XXX-XXXX">
+                <span class="error-message" id="error-telefono"></span>
+                <span class="valid-icon" id="icon-telefono">&#10004;</span>
+
+                <label for="rol">Rol *</label>
+                <select id="rol">
+                    <option value="">ListBox*</option>
+                    <option value="admin">Administrador</option>
+                    <option value="usuario">Usuario</option>
+                </select>
+                <span class="error-message" id="error-rol"></span>
+                <span class="valid-icon" id="icon-rol">&#10004;</span>
+            </div>
+
+            <!-- Sección derecha: Foto del usuario -->
+            <div class="photo-section">
+                <img src="placeholder.jpg" alt="Placeholder de foto" class="user-photo">
+                <button type="button">Agregar foto del usuario</button>
+            </div>
+        </form>
+
+        <!-- Botones de acción -->
+        <div class="buttons">
+            <button type="button" class="create-button" id="crearBtn" disabled>Crear</button>
+            <button type="button" class="back-button">Regresar</button>
+        </div>
+    </div>
+
+    <script>
+        const nombre = document.getElementById('nombreUsuario');
+        const correo = document.getElementById('correo');
+        const telefono = document.getElementById('telefono');
+        const rol = document.getElementById('rol');
+
+        const errorNombre = document.getElementById('error-nombre');
+        const errorCorreo = document.getElementById('error-correo');
+        const errorTelefono = document.getElementById('error-telefono');
+        const errorRol = document.getElementById('error-rol');
+
+        const iconNombre = document.getElementById('icon-nombre');
+        const iconCorreo = document.getElementById('icon-correo');
+        const iconTelefono = document.getElementById('icon-telefono');
+        const iconRol = document.getElementById('icon-rol');
+
+        const crearBtn = document.getElementById('crearBtn');
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+
+        function validarCampos() {
+            let isValid = true;
+
+            // Nombre
+            if (!nombre.value.trim()) {
+                errorNombre.textContent = "El nombre es obligatorio.";
+                iconNombre.style.display = 'none';
+                isValid = false;
+            } else {
+                errorNombre.textContent = "";
+                iconNombre.style.display = 'inline';
+            }
+
+            // Correo
+            if (!correo.value.trim()) {
+                errorCorreo.textContent = "El correo es obligatorio.";
+                iconCorreo.style.display = 'none';
+                isValid = false;
+            } else if (!emailRegex.test(correo.value)) {
+                errorCorreo.textContent = "Formato de correo inválido.";
+                iconCorreo.style.display = 'none';
+                isValid = false;
+            } else {
+                errorCorreo.textContent = "";
+                iconCorreo.style.display = 'inline';
+            }
+
+            // Teléfono
+            if (telefono.value.trim() && !phoneRegex.test(telefono.value)) {
+                errorTelefono.textContent = "Formato de teléfono inválido. Ejemplo: (123) 456-7890";
+                iconTelefono.style.display = 'none';
+                isValid = false;
+            } else {
+                errorTelefono.textContent = "";
+                iconTelefono.style.display = 'inline';
+            }
+
+            // Rol
+            if (!rol.value.trim()) {
+                errorRol.textContent = "Debe seleccionar un rol.";
+                iconRol.style.display = 'none';
+                isValid = false;
+            } else {
+                errorRol.textContent = "";
+                iconRol.style.display = 'inline';
+            }
+
+            // Habilitar/deshabilitar botón Crear
+            crearBtn.disabled = !isValid;
+
+            return isValid;
+        }
+
+        // Escuchar cambios en los campos
+        nombre.addEventListener('input', validarCampos);
+        correo.addEventListener('input', validarCampos);
+        telefono.addEventListener('input', validarCampos);
+        rol.addEventListener('change', validarCampos);
+    </script>
+
+</body>
+</html>
