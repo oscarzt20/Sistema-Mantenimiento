@@ -1,51 +1,98 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro Equipos</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Registro de Equipos</title>
+    <link rel="stylesheet" href="/Styles/estiloGeneral.css">
     <link rel="stylesheet" href="/Styles/estiloRegistroEquipos.css">
 </head>
 <body>
     <header>
-        <nav>
-            <ul class="navbar">
-                <li><strong>Dashboard</strong></li>
-                <li>INICIO</li>
+        <nav class="navbar">
+            <div class="navbar-brand">Dashboard de Mantenimiento</div>
+            <ul class="navbar-menu">
+                <li class="active">INICIO</li>
                 <li>EQUIPOS</li>
                 <li>MANTENIMIENTOS</li>
                 <li>REPORTES</li>
                 <li>USUARIOS</li>
             </ul>
+            <div class="navbar-notifications">
+                <button class="notification-btn">
+                    Notificaciones <span class="badge">3</span>
+                </button>
+                <div class="notification-dropdown">
+                    <div class="notification-item">Mantenimiento preventivo para Equipo A</div>
+                    <div class="notification-item">Alerta crítica en Equipo B</div>
+                    <div class="notification-item">Nuevo mantenimiento programado</div>
+                </div>
+            </div>
         </nav>
     </header>
 
     <main>
-        <form action="guardar_equipo.php" method="POST" enctype="multipart/form-data">
+        <form id="formEquipo" action="guardar_equipo.php" method="POST" enctype="multipart/form-data">
             <h2>Ingrese la información requerida*</h2>
 
             <div class="form-container">
                 <div class="left">
-                    <label>Nombre del equipo*<input type="text" name="nombre" maxlength="45" required></label>
-                    <label>No. de serie*<input type="text" name="serie" maxlength="15" required></label>
-                    <label>Responsable del equipo*<input type="text" name="responsable" maxlength="75" required></label>
-                    <label>Locación*<input type="number" name="locacion" max="99999999999999999999" required></label>
-                    <label>Descripción*<textarea name="descripcion" maxlength="80" required></textarea></label>
+                    <label>
+                        Nombre del equipo*
+                        <input type="text" name="nombre" required maxlength="45">
+                    </label>
+                    <label>
+                        No. de serie*
+                        <input type="text" name="serie" required maxlength="15">
+                    </label>
+                    <label>
+                        Responsable del equipo*
+                        <input type="text" name="responsable" required maxlength="75">
+                    </label>
+                    <label>
+                        Locación*
+                        <select name="locacion" required>
+                            <option value="">Seleccione una zona</option>
+                            <option value="Zona 1">Zona 1</option>
+                            <option value="Zona 2">Zona 2</option>
+                            <option value="Zona 3">Zona 3</option>
+                        </select>
+                    </label>
+                    <label>
+                        Descripción*
+                        <textarea name="descripcion" required maxlength="80"></textarea>
+                    </label>
                 </div>
 
                 <div class="right">
-                    <label>Estado<input type="text" name="estado" maxlength="25"></label>
-                    <label>Folio<input type="number" name="folio" max="9999999999"></label>
-                    <label>Fecha de ingreso*<input type="date" name="fecha_ingreso" required></label>
-                    <label>Agregar foto del equipo<input type="file" name="foto" accept="image/*"></label>
+                    <label>
+                        Estado
+                        <input type="text" name="estado" value="" disabled>
+                    </label>
+                    <label>
+                        Folio
+                        <input type="text" name="folio" value="" disabled>
+                    </label>
+                    <label>
+                        Fecha de ingreso*
+                        <input type="date" name="fecha_ingreso" required>
+                    </label>
+                    <label>
+                        Agregar foto del equipo
+                        <input type="file" name="foto" accept="image/*">
+                    </label>
                 </div>
             </div>
 
             <div class="buttons">
+                <button type="button" onclick="history.back()" class="back-btn">Regresar</button>
                 <button type="submit">Crear</button>
-                <button type="button" onclick="history.back()">Regresar</button>
             </div>
         </form>
+
+        <div id="mensaje-exito" class="mensaje-exito">Equipo registrado correctamente.</div>
     </main>
+
+    <script src="/scripts/registroEquipos.js"></script>
 </body>
 </html>
