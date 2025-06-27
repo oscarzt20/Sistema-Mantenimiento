@@ -1,11 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Registro Equipos</title>
+    <link rel="stylesheet" href="/Styles/estiloRegistroEquipos.css">
 </head>
 <body>
-    
+    <header>
+        <nav>
+            <ul class="navbar">
+                <li><strong>Dashboard</strong></li>
+                <li>INICIO</li>
+                <li>EQUIPOS</li>
+                <li>MANTENIMIENTOS</li>
+                <li>REPORTES</li>
+                <li>USUARIOS</li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <form action="guardar_equipo.php" method="POST" enctype="multipart/form-data">
+            <h2>Ingrese la información requerida*</h2>
+
+            <div class="form-container">
+                <div class="left">
+                    <label>Nombre del equipo*<input type="text" name="nombre" maxlength="45" required></label>
+                    <label>No. de serie*<input type="text" name="serie" maxlength="15" required></label>
+                    <label>Responsable del equipo*<input type="text" name="responsable" maxlength="75" required></label>
+                    <label>Locación*<input type="number" name="locacion" max="99999999999999999999" required></label>
+                    <label>Descripción*<textarea name="descripcion" maxlength="80" required></textarea></label>
+                </div>
+
+                <div class="right">
+                    <label>Estado<input type="text" name="estado" maxlength="25"></label>
+                    <label>Folio<input type="number" name="folio" max="9999999999"></label>
+                    <label>Fecha de ingreso*<input type="date" name="fecha_ingreso" required></label>
+                    <label>Agregar foto del equipo<input type="file" name="foto" accept="image/*"></label>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button type="submit">Crear</button>
+                <button type="button" onclick="history.back()">Regresar</button>
+            </div>
+        </form>
+    </main>
 </body>
 </html>
