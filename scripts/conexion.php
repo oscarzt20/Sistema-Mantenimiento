@@ -1,12 +1,16 @@
 <?php
-$host = 'localhost';
-$usuario = 'root';
-$contrasena = '';
-$base_datos = 'inventario';
+    // Variables necesarias para la BD
+    $host = "localhost";
+    $user = "root";
+    $password = "";
+    $database = "mantenimientobd";
 
-$conn = mysqli_connect($host, $usuario, $contrasena, $base_datos);
+    // constructor
+    $connection = new mysqli($host, $user, $password, $database);
 
-if (!$conn) {
-    die(\"Conexión fallida: \" . mysqli_connect_error());
-}
+    if ($connection->connect_error)
+    {
+        // Método die
+        die("Connection failed".$connection->connect_error);
+    }
 ?>
