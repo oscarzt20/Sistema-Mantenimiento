@@ -6,6 +6,7 @@
     <title>Registro de Equipos</title>
     <link rel="stylesheet" href="/Styles/estiloGeneral.css">
     <link rel="stylesheet" href="/Styles/estiloRegistroEquipos.css">
+    <script src="/scripts/registroEquipos.js" defer></script>
 </head>
 <body>
     <header>
@@ -32,7 +33,7 @@
     </header>
 
     <main>
-        <form id="formEquipo" action="guardar_equipo.php" method="POST" enctype="multipart/form-data">
+        <form id="formEquipo">
             <h2>Ingrese la información requerida*</h2>
 
             <div class="form-container">
@@ -92,7 +93,5 @@
 
         <div id="mensaje-exito" class="mensaje-exito">Equipo registrado correctamente.</div>
     </main>
-
-    <script src="/scripts/registroEquipos.js"></script>
 </body>
 </html>
