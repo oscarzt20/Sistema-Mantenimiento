@@ -52,13 +52,24 @@
                 <div class="row">
                     <div class="left">
                         <label>
+                            Tipo de equipo*
+                            <input type="text" name="tipo" required maxlength="45">
+                        </label>
+                        <label>
                             Nombre del equipo*
                             <input type="text" name="nombre" required maxlength="45">
                         </label>
                         <label>
                             No. de serie*
-                            <input type="text" name="serie" required maxlength="15">
+                            <input type="text" name="serie" required maxlength="25">
                         </label>
+                        <label>
+                            Descripción*
+                            <textarea name="descripcion" required maxlength="80"></textarea>
+                        </label>
+                    </div>
+
+                    <div class="right">
                         <label>
                             Responsable del equipo*
                             <select name="responsable" required>
@@ -76,13 +87,6 @@
                                 <option value="Zona 2">Zona 2</option>
                                 <option value="Zona 3">Zona 3</option>
                             </select>
-                        </label>
-                    </div>
-
-                    <div class="right">
-                        <label>
-                            Descripción*
-                            <textarea name="descripcion" required maxlength="80"></textarea>
                         </label>
                         <label>
                             Fecha de ingreso*
