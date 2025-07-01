@@ -19,6 +19,14 @@ h2 {
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 40px;
+    flex-direction: column;
+}
+
+.top {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 }
 
 .left, .right {
@@ -46,6 +54,8 @@ select {
     border-radius: 4px;
     background-color: #f5f7fa;
     margin-top: 5px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 textarea {
@@ -57,12 +67,19 @@ input[type="file"] {
     margin-top: 5px;
 }
 
-input[disabled] {
-    background-color: #eaeaea;
-    color: #777;
+input[disabled],
+.info-disabled {
+    background-color: #eaeaea !important;
+    color: #777 !important;
     cursor: not-allowed;
+    border: 1px dashed #bbb;
 }
 
 select {
     background-color: #f5f7fa;
+}
+
+/* Validación visual para campos no editables informativos */
+.info-disabled::placeholder {
+    color: #777;
 }

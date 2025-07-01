@@ -37,6 +37,17 @@
             <h2>Ingrese la información requerida*</h2>
 
             <div class="form-container">
+                <div class="top">
+                    <label>
+                        Estado
+                        <input type="text" name="estado" value="" disabled class="info-disabled">
+                    </label>
+                    <label>
+                        Folio
+                        <input type="text" name="folio" value="" disabled class="info-disabled">
+                    </label>
+                </div>
+
                 <div class="left">
                     <label>
                         Nombre del equipo*
@@ -48,7 +59,12 @@
                     </label>
                     <label>
                         Responsable del equipo*
-                        <input type="text" name="responsable" required maxlength="75">
+                        <select name="responsable" required>
+                            <option value="">Seleccione un responsable</option>
+                            <option value="Juan Pérez">Juan Pérez</option>
+                            <option value="Ana López">Ana López</option>
+                            <option value="Carlos Ramírez">Carlos Ramírez</option>
+                        </select>
                     </label>
                     <label>
                         Locación*
@@ -67,16 +83,8 @@
 
                 <div class="right">
                     <label>
-                        Estado
-                        <input type="text" name="estado" value="" disabled>
-                    </label>
-                    <label>
-                        Folio
-                        <input type="text" name="folio" value="" disabled>
-                    </label>
-                    <label>
                         Fecha de ingreso*
-                        <input type="date" name="fecha_ingreso" required>
+                        <input type="date" name="fecha_ingreso" required max="">
                     </label>
                     <label>
                         Agregar foto del equipo
