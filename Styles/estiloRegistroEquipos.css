@@ -71,8 +71,8 @@ select[disabled],
 textarea[disabled],
 input[disabled],
 .info-disabled {
-    background-color: #eaeaea !important;
-    color: #777 !important;
+    background-color: #eaeaea;
+    color: #777;
     cursor: not-allowed;
     border: 1px dashed #bbb;
 }
@@ -82,6 +82,10 @@ select {
 }
 
 /* Validación visual para campos no editables informativos */
+.top input[disabled]{
+    background-color: white;
+}
+
 .info-disabled::placeholder {
     color: #777;
 }

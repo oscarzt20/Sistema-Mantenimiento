@@ -41,11 +41,11 @@
                 <div class="top">
                     <label>
                         Estado
-                        <input type="text" name="estado" value="" disabled class="info-disabled">
+                        <input type="text" name="estado" value="" disabled class="info-disabled" placeholder="Aut.">
                     </label>
                     <label>
                         Folio
-                        <input type="text" name="folio" value="" disabled class="info-disabled">
+                        <input type="text" name="folio" value="" disabled class="info-disabled" placeholder="Aut.">
                     </label>
                 </div>
 
@@ -53,7 +53,12 @@
                     <div class="left">
                         <label>
                             Tipo de equipo*
-                            <input type="text" name="tipo" required maxlength="45">
+                            <select name="tipo" required>
+                                <option value="">Seleccione un tipo de equipo</option>
+                                <option value="Juan Pérez">PC / Laptop</option>
+                                <option value="Carlos Ramírez">Periférico</option>
+                                <option value="Carlos Ramírez">Impresora</option>
+                            </select>
                         </label>
                         <label>
                             Nombre del equipo*

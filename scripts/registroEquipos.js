@@ -5,8 +5,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const serieInput = form.querySelector("input[name='serie']");
 
     // Limitar la fecha de ingreso al día actual
-    const hoy = new Date().toISOString().split("T")[0];
-    fechaInput.max = hoy;
+    // const hoy = new Date().toISOString().split("T")[0];
+    // fechaInput.max = hoy;
+
+    if (fechaInput) {
+        const hoy = new Date();
+        const yyyy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const dd = String(hoy.getDate()).padStart(2, '0');
+        const fechaMaxima = `${yyyy}-${mm}-${dd}`;
+        fechaInput.max = fechaMaxima;
+    }
 
     // Validar que solo se ingresen números en el campo No. de serie
     serieInput.addEventListener("input", function () {
