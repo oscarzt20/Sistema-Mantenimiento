@@ -2,10 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Registro de Equipos</title>
-    <link rel="stylesheet" href="/Styles/estiloGeneral.css">
-    <link rel="stylesheet" href="/Styles/estiloRegistroEquipos.css">
+    <link rel="stylesheet" href="/Styles/estiloGeneral.css" />
+    <link rel="stylesheet" href="/Styles/estiloRegistroEquipos.css" />
     <script src="/scripts/registroEquipos.js" defer></script>
 </head>
 <body>
@@ -41,11 +41,11 @@
                 <div class="top">
                     <label>
                         Estado
-                        <input type="text" name="estado" value="" disabled class="info-disabled" placeholder="Aut.">
+                        <input type="text" name="estado" disabled class="info-disabled" placeholder="Aut." />
                     </label>
                     <label>
                         Folio
-                        <input type="text" name="folio" value="" disabled class="info-disabled" placeholder="Aut.">
+                        <input type="text" name="folio" disabled class="info-disabled" placeholder="Aut." />
                     </label>
                 </div>
 
@@ -53,20 +53,20 @@
                     <div class="left">
                         <label>
                             Tipo de equipo*
-                            <select name="tipo" required>
+                            <select name="tipoEquipo" required>
                                 <option value="">Seleccione un tipo de equipo</option>
-                                <option value="Juan Pérez">PC / Laptop</option>
-                                <option value="Carlos Ramírez">Periférico</option>
-                                <option value="Carlos Ramírez">Impresora</option>
+                                <option value="PC / Laptop">PC / Laptop</option>
+                                <option value="Periférico">Periférico</option>
+                                <option value="Impresora">Impresora</option>
                             </select>
                         </label>
                         <label>
                             Nombre del equipo*
-                            <input type="text" name="nombre" required maxlength="45">
+                            <input type="text" name="nombreEquipo" required maxlength="45" />
                         </label>
                         <label>
                             No. de serie*
-                            <input type="text" name="serie" required maxlength="25">
+                            <input type="text" name="numeroSerie" required maxlength="25" />
                         </label>
                         <label>
                             Descripción*
@@ -77,29 +77,27 @@
                     <div class="right">
                         <label>
                             Responsable del equipo*
-                            <select name="responsable" required>
+                            <select name="id_usuario" required>
                                 <option value="">Seleccione un responsable</option>
-                                <option value="Juan Pérez">Juan Pérez</option>
-                                <option value="Ana López">Ana López</option>
-                                <option value="Carlos Ramírez">Carlos Ramírez</option>
+                                <option value="1">Juan Pérez</option>
+                                <option value="2">Ana López</option>
+                                <option value="3">Carlos Ramírez</option>
                             </select>
                         </label>
                         <label>
                             Locación*
-                            <select name="locacion" required>
+                            <select name="id_ubicacion" required>
                                 <option value="">Seleccione una zona</option>
-                                <option value="Zona 1">Zona 1</option>
-                                <option value="Zona 2">Zona 2</option>
-                                <option value="Zona 3">Zona 3</option>
+                                <!-- Estas opciones se cargarán dinámicamente -->
                             </select>
                         </label>
                         <label>
                             Fecha de ingreso*
-                            <input type="date" name="fecha_ingreso" required max="">
+                            <input type="date" name="fechaIngreso" required max="" />
                         </label>
                         <label>
                             Agregar foto del equipo
-                            <input type="file" name="foto" accept="image/*">
+                            <input type="file" name="foto" accept="image/*" />
                         </label>
                     </div>
                 </div>
