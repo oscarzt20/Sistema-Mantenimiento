@@ -1,29 +1,17 @@
 <?php
-// obtenerOpciones.php
-
 header('Content-Type: application/json');
-include 'conexion.php'; // Tu archivo de conexión a BD
-
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    echo json_encode(['status' => 'error', 'message' => 'Método no permitido.']);
-    exit;
-}
+include 'conexion.php';
 
 try {
-    // Obtener responsables
-    $resultResp = $connection->query("SELECT id_usuario, nombreUsuario FROM usuarios ORDER BY nombreUsuario");
-    $responsables = $resultResp->fetch_all(MYSQLI_ASSOC);
-
-    // Obtener ubicaciones
-    $resultUbi = $connection->query("SELECT id_ubicacion, nombreUbicacion FROM ubicaciones ORDER BY nombreUbicacion");
-    $ubicaciones = $resultUbi->fetch_all(MYSQLI_ASSOC);
+    $usuarios = $connection->query("SELECT id_usuario, nombreUsuario FROM usuarios")->fetch_all(MYSQLI_ASSOC);
+    $ubicaciones = $connection->query("SELECT id_ubicacion, nombreUbicacion FROM ubicaciones")->fetch_all(MYSQLI_ASSOC);
 
     echo json_encode([
-        'status' => 'success',
-        'responsables' => $responsables,
-        'ubicaciones' => $ubicaciones
+        "status" => "success",
+        "responsables" => $usuarios,
+        "ubicaciones" => $ubicaciones
     ]);
 } catch (Exception $e) {
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
 }
 ?>
