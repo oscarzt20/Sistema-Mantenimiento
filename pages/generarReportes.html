@@ -4,138 +4,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplicación Web de Mantenimiento</title>
+    <title>Generar Reportes</title>
+    <!-- Enlace a Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/Styles/generarReportes.css">
+    <!-- Enlace a Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Enlace a nuestro archivo CSS personalizado -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="bg-[#1a1a2e] text-white min-h-screen flex flex-col">
+<body class="bg-[#f5f5f5] text-[#333] min-h-screen flex flex-col">
 
-    <header class="bg-[#0f0f1a] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold rounded">Generar reportes</h1>
-            <nav>
-                <ul class="flex space-x-4">
-                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Dashboard</a></li>
-                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Inicio</a></li>
-                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Equipos</a></li>
-                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Mantenimientos</a></li>
-                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Reportes</a></li>
-                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Usuarios</a></li>
-                </ul>
-            </nav>
+    <!-- Barra de navegación superior -->
+    <nav class="bg-[#2c3e50] text-white p-4 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center relative">
+            <!-- Título de la aplicación -->
+            <h1 class="text-2xl font-semibold mb-4 md:mb-0">Generar reportes</h1>
+            <!-- Enlaces de navegación y botón de notificaciones -->
+            <div class="flex flex-wrap justify-center md:justify-end items-center space-x-4 md:space-x-6 text-lg">
+                <a href="#"
+                    class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Dashboard</a>
+                <a href="#" class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Inicio</a>
+                <a href="#" class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Equipos</a>
+                <a href="#"
+                    class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Mantenimientos</a>
+                <a href="#" class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Reportes</a>
+                <a href="#" class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Usuarios</a>
+
+                <!-- Botón de Notificaciones -->
+                <div class="relative ml-4">
+                    <button id="notificationButton"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200 relative">
+                        Notificaciones
+                        <span class="notification-badge">3</span> <!-- Badge de notificación -->
+                    </button>
+
+                    <!-- Menú desplegable de notificaciones -->
+                    <div id="notificationDropdown"
+                        class="hidden absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-20">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Nueva solicitud de
+                            mantenimiento</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Equipo "Servidor X"
+                            requiere revisión</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Reporte mensual
+                            generado</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <main class="flex-grow container mx-auto p-6 flex items-center justify-center">
-        <section class="bg-[#0f0f1a] p-10 rounded-lg shadow-lg w-full max-w-4xl">
-            <div class="header mb-8 text-center">
-                <h2 class="text-xl font-semibold text-white mb-4">Ingrese la información requerida*</h2>
-            </div>
+    <!-- Contenido principal de la aplicación -->
+    <main class="flex-grow container mx-auto p-4 md:p-8 flex items-center justify-center">
+        <!-- Tarjeta del formulario de generación de reportes -->
+        <div class="bg-white p-6 md:p-8 rounded-lg shadow-xl w-full max-w-4xl border border-gray-200 text-[#333]">
+            <!-- Título del formulario -->
+            <h2 class="text-xl md:text-2xl font-semibold text-center mb-6 text-[#555]">Ingrese la información requerida*
+            </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
-                <div class="space-y-6 flex flex-col items-end text-right">
-                    <div class="w-full flex items-center justify-end">
-                        <label for="team-name" class="text-white text-lg mr-4 whitespace-nowrap">Nombre del
+            <!-- Formulario -->
+            <form id="reportForm" class="space-y-4">
+                <!-- Grid para campos de formulario (2 columnas en md y arriba, 1 columna en sm) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <!-- Campo: Nombre del equipo -->
+                    <div>
+                        <label for="nombreEquipo" class="block text-sm font-medium mb-1">Nombre del equipo</label>
+                        <input type="text" id="nombreEquipo" name="nombreEquipo" placeholder="String(45)*"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: Estado de mantenimiento -->
+                    <div>
+                        <label for="estadoMantenimiento" class="block text-sm font-medium mb-1">Estado de
+                            mantenimiento</label>
+                        <input type="text" id="estadoMantenimiento" name="estadoMantenimiento" placeholder="String(45)*"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: No. de serie -->
+                    <div>
+                        <label for="noSerie" class="block text-sm font-medium mb-1">No. de serie</label>
+                        <input type="text" id="noSerie" name="noSerie"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: Costo del mantenimiento -->
+                    <div>
+                        <label for="costoMantenimiento" class="block text-sm font-medium mb-1">Costo del
+                            mantenimiento</label>
+                        <input type="number" id="costoMantenimiento" name="costoMantenimiento" placeholder="Int*"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: Responsable del equipo -->
+                    <div>
+                        <label for="responsableEquipo" class="block text-sm font-medium mb-1">Responsable del
                             equipo</label>
-                        <input type="text" id="team-name" placeholder="String(45)*"
-                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
+                        <input type="text" id="responsableEquipo" name="responsableEquipo"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <div class="w-full flex items-center justify-end">
-                        <label for="serial-number" class="text-white text-lg mr-4 whitespace-nowrap">No. de
-                            serie</label>
-                        <input type="text" id="serial-number"
-                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
+                    <!-- Campo: Observaciones (textarea) -->
+                    <div>
+                        <label for="observaciones" class="block text-sm font-medium mb-1">Observaciones</label>
+                        <textarea id="observaciones" name="observaciones" rows="3" placeholder="String(200)*"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 resize-y"></textarea>
                     </div>
-                    <div class="w-full flex items-center justify-end">
-                        <label for="responsible-person" class="text-white text-lg mr-4 whitespace-nowrap">Responsable
-                            del equipo</label>
-                        <input type="text" id="responsible-person"
-                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
+                    <!-- Campo: Locación -->
+                    <div>
+                        <label for="locacion" class="block text-sm font-medium mb-1">Locación</label>
+                        <input type="text" id="locacion" name="locacion"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <div class="w-full flex items-center justify-end">
-                        <label for="location" class="text-white text-lg mr-4 whitespace-nowrap">Locación</label>
-                        <input type="text" id="location"
-                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
+                    <!-- Campo: Descripción (textarea) -->
+                    <div>
+                        <label for="descripcion" class="block text-sm font-medium mb-1">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" rows="3"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 resize-y"></textarea>
                     </div>
-                    <div class="w-full flex items-start justify-end">
-                        <label for="description"
-                            class="text-white text-lg mr-4 mt-2 whitespace-nowrap">Descripción</label>
-                        <textarea id="description" rows="4"
-                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white resize-none"></textarea>
+                    <!-- Campo: Fecha de salida -->
+                    <div>
+                        <label for="fechaSalida" class="block text-sm font-medium mb-1">Fecha de salida</label>
+                        <input type="date" id="fechaSalida" name="fechaSalida" placeholder="Date"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <div class="w-full flex items-center justify-end">
-                        <label for="entry-date" class="text-white text-lg mr-4 whitespace-nowrap">Fecha de
-                            ingreso</label>
-                        <input type="text" id="entry-date" placeholder="Date*"
-                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white cursor-pointer"
-                            readonly>
+                    <!-- Campo: Fecha de Ingreso -->
+                    <div>
+                        <label for="fechaIngreso" class="block text-sm font-medium mb-1">Fecha de Ingreso</label>
+                        <input type="date" id="fechaIngreso" name="fechaIngreso" placeholder="Date"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                 </div>
 
-                <div class="space-y-6 flex flex-col items-start text-left">
-                    <div class="w-full flex items-center justify-start">
-                        <label for="maintenance-status" class="text-white text-lg ml-4 whitespace-nowrap">Estado de
-                            mantenimiento</label>
-                        <input type="text" id="maintenance-status" placeholder="String(45)*"
-                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
-                    </div>
-                    <div class="w-full flex items-center justify-start">
-                        <label for="maintenance-cost" class="text-white text-lg ml-4 whitespace-nowrap">Costo del
-                            mantenimiento</label>
-                        <input type="text" id="maintenance-cost" placeholder="Int*"
-                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
-                    </div>
-                    <div class="w-full flex items-start justify-start">
-                        <label for="observations"
-                            class="text-white text-lg ml-4 mt-2 whitespace-nowrap">Observaciones</label>
-                        <textarea id="observations" rows="4" placeholder="String(200)*"
-                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white resize-none"></textarea>
-                    </div>
-                    <div class="w-full flex items-center justify-start">
-                        <label for="exit-date" class="text-white text-lg ml-4 whitespace-nowrap">Fecha de salida</label>
-                        <input type="text" id="exit-date" placeholder="Date*"
-                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white cursor-pointer"
-                            readonly>
-                    </div>
+                <!-- Botones de acción -->
+                <div class="flex justify-center space-x-4 mt-6">
+                    <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md transition-colors duration-200 shadow-md">
+                        Crear
+                    </button>
+                    <button type="button" id="regresarButton"
+                        class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-md transition-colors duration-200 shadow-md">
+                        Regresar
+                    </button>
                 </div>
-            </div>
-
-            <div class="flex justify-center space-x-24 mt-16">
-                <button id="create-report-button"
-                    class="px-8 py-3 bg-[#87ceeb] text-[#1a1a2e] font-semibold rounded-md hover:bg-[#6cbada] focus:outline-none focus:ring-2 focus:ring-[#87ceeb] focus:ring-offset-2">
-                    Crear
-                </button>
-                <button id="go-back-button"
-                    class="px-8 py-3 bg-[#87ceeb] text-[#1a1a2e] font-semibold rounded-md hover:bg-[#6cbada] focus:outline-none focus:ring-2 focus:ring-[#87ceeb] focus:ring-offset-2">
-                    Regresar
-                </button>
-            </div>
-        </section>
+            </form>
+        </div>
     </main>
 
-    <div id="calendar-popup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-4 rounded-lg shadow-lg">
-            <div class="flex justify-between items-center mb-4">
-                <button id="prev-month" class="px-3 py-1 bg-gray-200 rounded-md">&lt;</button>
-                <h3 id="current-month-year" class="text-lg font-semibold text-[#333]"></h3>
-                <button id="next-month" class="px-3 py-1 bg-gray-200 rounded-md">&gt;</button>
-            </div>
-            <div class="calendar-grid-popup">
-                <div class="calendar-day-popup font-bold">Lun</div>
-                <div class="calendar-day-popup font-bold">Mar</div>
-                <div class="calendar-day-popup font-bold">Mié</div>
-                <div class="calendar-day-popup font-bold">Jue</div>
-                <div class="calendar-day-popup font-bold">Vie</div>
-                <div class="calendar-day-popup font-bold">Sáb</div>
-                <div class="calendar-day-popup font-bold">Dom</div>
-            </div>
-            <button id="close-calendar"
-                class="mt-4 w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Cerrar</button>
-        </div>
-    </div>
-
-    <script src="/scripts/generarReportes.js"></script>
+    <!-- Enlace a nuestro archivo JavaScript -->
+    <script src="script.js"></script>
 
 </body>
 
