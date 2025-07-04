@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación Web de Mantenimiento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/Styles/generarReportes.css">
+</head>
+
+<body class="bg-[#1a1a2e] text-white min-h-screen flex flex-col">
+
+    <header class="bg-[#0f0f1a] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold rounded">Página 8 - Generar reportes</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Dashboard</a></li>
+                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Inicio</a></li>
+                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Equipos</a></li>
+                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Mantenimientos</a></li>
+                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Reportes</a></li>
+                    <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Usuarios</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto p-6 flex items-center justify-center">
+        <section class="bg-[#0f0f1a] p-10 rounded-lg shadow-lg w-full max-w-4xl">
+            <div class="header mb-8 text-center">
+                <h2 class="text-xl font-semibold text-white mb-4">Ingrese la información requerida*</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
+                <div class="space-y-6 flex flex-col items-end text-right">
+                    <div class="w-full flex items-center justify-end">
+                        <label for="team-name" class="text-white text-lg mr-4 whitespace-nowrap">Nombre del
+                            equipo</label>
+                        <input type="text" id="team-name" placeholder="String(45)*"
+                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
+                    </div>
+                    <div class="w-full flex items-center justify-end">
+                        <label for="serial-number" class="text-white text-lg mr-4 whitespace-nowrap">No. de
+                            serie</label>
+                        <input type="text" id="serial-number"
+                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
+                    </div>
+                    <div class="w-full flex items-center justify-end">
+                        <label for="responsible-person" class="text-white text-lg mr-4 whitespace-nowrap">Responsable
+                            del equipo</label>
+                        <input type="text" id="responsible-person"
+                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
+                    </div>
+                    <div class="w-full flex items-center justify-end">
+                        <label for="location" class="text-white text-lg mr-4 whitespace-nowrap">Locación</label>
+                        <input type="text" id="location"
+                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
+                    </div>
+                    <div class="w-full flex items-start justify-end">
+                        <label for="description"
+                            class="text-white text-lg mr-4 mt-2 whitespace-nowrap">Descripción</label>
+                        <textarea id="description" rows="4"
+                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white resize-none"></textarea>
+                    </div>
+                    <div class="w-full flex items-center justify-end">
+                        <label for="entry-date" class="text-white text-lg mr-4 whitespace-nowrap">Fecha de
+                            ingreso</label>
+                        <input type="text" id="entry-date" placeholder="Date*"
+                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white cursor-pointer"
+                            readonly>
+                    </div>
+                </div>
+
+                <div class="space-y-6 flex flex-col items-start text-left">
+                    <div class="w-full flex items-center justify-start">
+                        <label for="maintenance-status" class="text-white text-lg ml-4 whitespace-nowrap">Estado de
+                            mantenimiento</label>
+                        <input type="text" id="maintenance-status" placeholder="String(45)*"
+                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
+                    </div>
+                    <div class="w-full flex items-center justify-start">
+                        <label for="maintenance-cost" class="text-white text-lg ml-4 whitespace-nowrap">Costo del
+                            mantenimiento</label>
+                        <input type="text" id="maintenance-cost" placeholder="Int*"
+                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white">
+                    </div>
+                    <div class="w-full flex items-start justify-start">
+                        <label for="observations"
+                            class="text-white text-lg ml-4 mt-2 whitespace-nowrap">Observaciones</label>
+                        <textarea id="observations" rows="4" placeholder="String(200)*"
+                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white resize-none"></textarea>
+                    </div>
+                    <div class="w-full flex items-center justify-start">
+                        <label for="exit-date" class="text-white text-lg ml-4 whitespace-nowrap">Fecha de salida</label>
+                        <input type="text" id="exit-date" placeholder="Date*"
+                            class="flex-grow p-2 border-2 border-[#4a4a5e] bg-[#2d2d44] rounded-md focus:outline-none focus:border-blue-500 text-white cursor-pointer"
+                            readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center space-x-24 mt-16">
+                <button id="create-report-button"
+                    class="px-8 py-3 bg-[#87ceeb] text-[#1a1a2e] font-semibold rounded-md hover:bg-[#6cbada] focus:outline-none focus:ring-2 focus:ring-[#87ceeb] focus:ring-offset-2">
+                    Crear
+                </button>
+                <button id="go-back-button"
+                    class="px-8 py-3 bg-[#87ceeb] text-[#1a1a2e] font-semibold rounded-md hover:bg-[#6cbada] focus:outline-none focus:ring-2 focus:ring-[#87ceeb] focus:ring-offset-2">
+                    Regresar
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <div id="calendar-popup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-4 rounded-lg shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <button id="prev-month" class="px-3 py-1 bg-gray-200 rounded-md">&lt;</button>
+                <h3 id="current-month-year" class="text-lg font-semibold text-[#333]"></h3>
+                <button id="next-month" class="px-3 py-1 bg-gray-200 rounded-md">&gt;</button>
+            </div>
+            <div class="calendar-grid-popup">
+                <div class="calendar-day-popup font-bold">Lun</div>
+                <div class="calendar-day-popup font-bold">Mar</div>
+                <div class="calendar-day-popup font-bold">Mié</div>
+                <div class="calendar-day-popup font-bold">Jue</div>
+                <div class="calendar-day-popup font-bold">Vie</div>
+                <div class="calendar-day-popup font-bold">Sáb</div>
+                <div class="calendar-day-popup font-bold">Dom</div>
+            </div>
+            <button id="close-calendar"
+                class="mt-4 w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Cerrar</button>
+        </div>
+    </div>
+
+    <script src="/scripts/generarReportes.js"></script>
+
+</body>
+
+</html>
