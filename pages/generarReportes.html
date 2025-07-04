@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Reportes</title>
+    <!-- Enlace a Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Enlace a Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Enlace a nuestro archivo CSS personalizado -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-[#f5f5f5] text-[#333] min-h-screen flex flex-col">
+
+    <!-- Barra de navegación superior -->
+    <nav class="bg-[#2c3e50] text-white p-4 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center relative">
+            <!-- Título de la aplicación -->
+            <h1 class="text-2xl font-semibold mb-4 md:mb-0">Generar reportes</h1>
+            <!-- Enlaces de navegación y botón de notificaciones -->
+            <div class="flex flex-wrap justify-center md:justify-end items-center space-x-4 md:space-x-6 text-lg">
+                <a href="#"
+                    class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Dashboard</a>
+                <a href="#" class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Inicio</a>
+                <a href="#" class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Equipos</a>
+                <a href="#"
+                    class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Mantenimientos</a>
+                <a href="#" class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Reportes</a>
+                <a href="#" class="hover:text-gray-300 transition-colors duration-200 rounded-md px-2 py-1">Usuarios</a>
+
+                <!-- Botón de Notificaciones -->
+                <div class="relative ml-4">
+                    <button id="notificationButton"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200 relative">
+                        Notificaciones
+                        <span class="notification-badge">3</span> <!-- Badge de notificación -->
+                    </button>
+
+                    <!-- Menú desplegable de notificaciones -->
+                    <div id="notificationDropdown"
+                        class="hidden absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-20">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Nueva solicitud de
+                            mantenimiento</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Equipo "Servidor X"
+                            requiere revisión</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Reporte mensual
+                            generado</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal de la aplicación -->
+    <main class="flex-grow container mx-auto p-4 md:p-8 flex items-center justify-center">
+        <!-- Tarjeta del formulario de generación de reportes -->
+        <div class="bg-white p-6 md:p-8 rounded-lg shadow-xl w-full max-w-4xl border border-gray-200 text-[#333]">
+            <!-- Título del formulario -->
+            <h2 class="text-xl md:text-2xl font-semibold text-center mb-6 text-[#555]">Ingrese la información requerida*
+            </h2>
+
+            <!-- Formulario -->
+            <form id="reportForm" class="space-y-4">
+                <!-- Grid para campos de formulario (2 columnas en md y arriba, 1 columna en sm) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <!-- Campo: Nombre del equipo -->
+                    <div>
+                        <label for="nombreEquipo" class="block text-sm font-medium mb-1">Nombre del equipo</label>
+                        <input type="text" id="nombreEquipo" name="nombreEquipo" placeholder="String(45)*"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: Estado de mantenimiento -->
+                    <div>
+                        <label for="estadoMantenimiento" class="block text-sm font-medium mb-1">Estado de
+                            mantenimiento</label>
+                        <input type="text" id="estadoMantenimiento" name="estadoMantenimiento" placeholder="String(45)*"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: No. de serie -->
+                    <div>
+                        <label for="noSerie" class="block text-sm font-medium mb-1">No. de serie</label>
+                        <input type="text" id="noSerie" name="noSerie"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: Costo del mantenimiento -->
+                    <div>
+                        <label for="costoMantenimiento" class="block text-sm font-medium mb-1">Costo del
+                            mantenimiento</label>
+                        <input type="number" id="costoMantenimiento" name="costoMantenimiento" placeholder="Int*"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: Responsable del equipo -->
+                    <div>
+                        <label for="responsableEquipo" class="block text-sm font-medium mb-1">Responsable del
+                            equipo</label>
+                        <input type="text" id="responsableEquipo" name="responsableEquipo"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: Observaciones (textarea) -->
+                    <div>
+                        <label for="observaciones" class="block text-sm font-medium mb-1">Observaciones</label>
+                        <textarea id="observaciones" name="observaciones" rows="3" placeholder="String(200)*"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 resize-y"></textarea>
+                    </div>
+                    <!-- Campo: Locación -->
+                    <div>
+                        <label for="locacion" class="block text-sm font-medium mb-1">Locación</label>
+                        <input type="text" id="locacion" name="locacion"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: Descripción (textarea) -->
+                    <div>
+                        <label for="descripcion" class="block text-sm font-medium mb-1">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" rows="3"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 resize-y"></textarea>
+                    </div>
+                    <!-- Campo: Fecha de salida -->
+                    <div>
+                        <label for="fechaSalida" class="block text-sm font-medium mb-1">Fecha de salida</label>
+                        <input type="date" id="fechaSalida" name="fechaSalida" placeholder="Date"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Campo: Fecha de Ingreso -->
+                    <div>
+                        <label for="fechaIngreso" class="block text-sm font-medium mb-1">Fecha de Ingreso</label>
+                        <input type="date" id="fechaIngreso" name="fechaIngreso" placeholder="Date"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex justify-center space-x-4 mt-6">
+                    <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md transition-colors duration-200 shadow-md">
+                        Crear
+                    </button>
+                    <button type="button" id="regresarButton"
+                        class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-md transition-colors duration-200 shadow-md">
+                        Regresar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Enlace a nuestro archivo JavaScript -->
+    <script src="/scripts/generarReportes.js"></script>
+
+</body>
+
+</html>

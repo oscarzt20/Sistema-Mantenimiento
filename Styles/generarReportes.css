@@ -1,0 +1,24 @@
+/* Aplicar la fuente Inter a todo el cuerpo */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Ajuste para el color del texto del placeholder en los inputs */
+input::placeholder, textarea::placeholder {
+    color: #6b7280; /* gray-500, un gris más oscuro para el placeholder */
+}
+
+/* Estilo para el badge de notificación */
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ef4444; /* red-500 */
+    color: white;
+    border-radius: 9999px; /* fully rounded */
+    padding: 0.125rem 0.375rem; /* py-0.5 px-1.5 */
+    font-size: 0.75rem; /* text-xs */
+    line-height: 1;
+    min-width: 1.25rem; /* w-5 */
+    text-align: center;
+}

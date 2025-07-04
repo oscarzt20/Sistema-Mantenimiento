@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Aplicación Web de Mantenimiento</title>
+    <link rel="stylesheet" href="/Styles/mostrarReportes.css">
+</head>
+<body>
+        <!-- Barra de arriba (Header) -->
+        <header class="bg-[#0f0f1a] text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold rounded">Reportes</h1>
+                <nav>
+                    <ul class="flex space-x-4">
+                        <li><a href="#"
+                                class="hover:bg-[#87ceeb] hover:text-[#1a1a2e] rounded-md p-2 transition-colors duration-200">Dashboard</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:bg-[#87ceeb] hover:text-[#1a1a2e] rounded-md p-2 transition-colors duration-200">Inicio</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:bg-[#87ceeb] hover:text-[#1a1a2e] rounded-md p-2 transition-colors duration-200">Equipos</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:bg-[#87ceeb] hover:text-[#1a1a2e] rounded-md p-2 transition-colors duration-200">Mantenimientos</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:bg-[#87ceeb] hover:text-[#1a1a2e] rounded-md p-2 transition-colors duration-200">Reportes</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:bg-[#87ceeb] hover:text-[#1a1a2e] rounded-md p-2 transition-colors duration-200">Usuarios</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+        <!-- Contenido principal -->
+        <main class="flex-grow container mx-auto p-6 flex items-center justify-center">
+            <section class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-8 text-[#333]">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-[#333]">REPORTE DE MANTENIMIENTO</h2>
+                    <p class="text-lg text-right">Folio: <span id="report-folio"></span></p>
+                </div>
+        
+                <div class="mb-4">
+                    <p><span class="font-semibold">Nombre del equipo:</span> <span id="report-team-name"></span></p>
+                    <p><span class="font-semibold">Responsable del equipo:</span> <span id="report-responsible"></span></p>
+                    <p><span class="font-semibold">Locación:</span> <span id="report-location"></span></p>
+                    <p><span class="font-semibold">Descripción:</span> <span id="report-description"></span></p>
+                    <p><span class="font-semibold">Observaciones:</span> <span id="report-observations"></span></p>
+                </div>
+        
+                <div class="overflow-x-auto mb-4">
+                    <table class="min-w-full border-collapse border border-[#ccc]">
+                        <thead>
+                            <tr class="bg-[#e0e0e0]">
+                                <th class="border border-[#ccc] p-2">No. de serie</th>
+                                <th class="border border-[#ccc] p-2">Fecha de ingreso</th>
+                                <th class="border border-[#ccc] p-2">Fecha de salida</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-[#ccc] p-2 text-center"><span id="report-serial"></span></td>
+                                <td class="border border-[#ccc] p-2 text-center"><span id="report-entry-date"></span></td>
+                                <td class="border border-[#ccc] p-2 text-center"><span id="report-exit-date"></span></td>
+                            </tr>
+                            <!-- Filas adicionales de la tabla se pueden agregar dinámicamente con JS -->
+                        </tbody>
+                    </table>
+                </div>
+        
+                <div class="text-right mb-6">
+                    <p class="text-lg"><span class="font-semibold">Totales: $</span> <span id="report-total"></span></p>
+                </div>
+        
+                <div class="text-center flex justify-center space-x-4">
+                    <button id="print-button"
+                        class="px-6 py-3 bg-[#87ceeb] text-[#1a1a2e] font-semibold rounded-md hover:bg-[#6cbada] focus:outline-none focus:ring-2 focus:ring-[#87ceeb] focus:ring-offset-2">
+                        Imprimir
+                    </button>
+                    <button id="analyze-report-button"
+                        class="px-6 py-3 bg-[#87ceeb] text-[#1a1a2e] font-semibold rounded-md hover:bg-[#6cbada] focus:outline-none focus:ring-2 focus:ring-[#87ceeb] focus:ring-offset-2">
+                        Analizar Reporte ✨
+                    </button>
+                </div>
+        
+                <div id="analysis-output" class="mt-8 p-4 bg-gray-100 rounded-lg border border-gray-200 hidden">
+                    <h3 class="text-xl font-semibold mb-2">Análisis del Reporte:</h3>
+                    <p id="analysis-text" class="text-gray-700"></p>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Custom Modal/Message Box -->
+        <div id="custom-modal-backdrop" class="custom-modal-backdrop"></div>
+        <div id="custom-modal" class="custom-modal">
+            <p id="modal-message"></p>
+            <div id="modal-buttons" class="custom-modal-buttons">
+                <button id="modal-ok-button" class="confirm-btn">OK</button>
+                <button id="modal-cancel-button" class="cancel-btn hidden">Cancelar</button>
+            </div>
+        </div>
+        
+        <!-- Loading Indicator -->
+        <div id="loading-indicator" class="loading-indicator">Cargando...</div>
+
+        <script src="/scripts/mostrarReporte.js"></script>
+</body>
+</html>
