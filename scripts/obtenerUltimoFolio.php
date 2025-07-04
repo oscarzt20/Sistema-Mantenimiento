@@ -1,14 +1,12 @@
 <?php
-include "./conexion.php";
+include 'conexion.php';
 header('Content-Type: application/json');
 
-// Consultar el último id_equipo
-$result = $connection->query("SELECT MAX(id_equipo) AS ultimo FROM equipos");
+$result = $connection->query("SELECT MAX(id_equipo) AS ultimoID FROM equipos");
 
 if ($result && $row = $result->fetch_assoc()) {
-    $ultimoFolio = intval($row["ultimo"] ?? 0);
-    echo json_encode(["ultimoFolio" => $ultimoFolio]);
+    echo json_encode(["ultimoID" => intval($row["ultimoID"])]);
 } else {
-    echo json_encode(["ultimoFolio" => 0, "error" => "No se pudo obtener el último folio"]);
+    echo json_encode(["ultimoID" => 0]);
 }
 ?>

@@ -24,12 +24,13 @@ $id_ubicacion = intval($_POST["id_ubicacion"]);
 $id_usuario = intval($_POST["id_usuario"]);
 $id_estado = 1;
 
+// Validación de número de serie duplicado
 $check = $connection->prepare("SELECT 1 FROM equipos WHERE numeroSerie = ?");
 $check->bind_param("s", $serie);
 $check->execute();
 $check->store_result();
 if ($check->num_rows > 0) {
-    echo json_encode(["status" => "error", "message" => "El número de serie ya existe."]);
+    echo json_encode(["status" => "error", "message" => "Ya existe un equipo con ese número de serie."]);
     exit;
 }
 $check->close();

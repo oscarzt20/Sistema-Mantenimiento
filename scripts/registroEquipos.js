@@ -48,7 +48,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  async function obtenerProximoFolio() {
+    try {
+      const response = await fetch('../scripts/obtenerUltimoFolio.php');
+      const data = await response.json();
+
+      if (data.ultimoID !== undefined) {
+        const nuevoID = data.ultimoID + 1;
+        const folioInput = document.querySelector("input[name='folio']");
+        folioInput.value = nuevoID;
+      }
+    } catch (error) {
+      console.error("Error obteniendo folio:", error);
+    }
+  }
+
   cargarOpciones();
+  obtenerProximoFolio();
+
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
