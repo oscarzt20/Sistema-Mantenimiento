@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo Notificaciones con Botones</title>
+  <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
+  <style>
+    .navbar-notifications {
+      position: relative;
+    }
+
+    .notification-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background-color: white;
+      min-width: 400px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      z-index: 100;
+      padding: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .notification-dropdown.show {
+      display: block;
+    }
+
+    .notification-item {
+      background: #f9f9f9;
+      margin-bottom: 10px;
+      padding: 15px;
+      border-radius: 6px;
+      color: #2c3e50;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      font-size: 0.95rem;
+    }
+
+    .notification-item p {
+      margin: 0 0 10px;
+    }
+
+    .notification-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .notification-actions button {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .btn-enterado {
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    .btn-correo {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .btn-enterado:disabled,
+    .btn-correo:disabled {
+      background-color: #bdc3c7;
+      color: #fff;
+      cursor: default;
+    }
+
+    .notification-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .badge {
+      background-color: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 0.8rem;
+      margin-left: 5px;
+    }
+
+    .notification-trigger {
+      margin: 30px;
+    }
+
+    .no-notifications {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="navbar-brand">Dashboard de Mantenimiento</div>
+      <ul class="navbar-menu">
+        <li>INICIO</li>
+        <li class="active">EQUIPOS</li>
+        <li>MANTENIMIENTOS</li>
+        <li>REPORTES</li>
+        <li>USUARIOS</li>
+      </ul>
+      <div class="navbar-notifications">
+        <button class="notification-btn" onclick="toggleDropdown()">
+          Notificaciones <span id="notification-badge" class="badge">0</span>
+        </button>
+        <div class="notification-dropdown" id="dropdown">
+          <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="notification-trigger">
+      <button onclick="simularNotificacion()">Simular llegada de notificación</button>
+    </div>
+  </main>
+
+  <script>
+    let contador = 0;
+    const maxVisibleLeidas = 3;
+
+    function toggleDropdown() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.classList.toggle("show");
+    }
+
+    function actualizarContador(delta) {
+      contador += delta;
+      const badge = document.getElementById("notification-badge");
+      badge.textContent = contador;
+    }
+
+    function simularNotificacion() {
+      const dropdown = document.getElementById("dropdown");
+      const noNotif = document.getElementById("noNotifications");
+      if (noNotif) noNotif.remove();
+
+      actualizarContador(1);
+
+      const item = document.createElement("div");
+      item.classList.add("notification-item");
+
+      item.innerHTML = `
+        <p><strong>Ana López</strong>, el equipo <strong>iMac 27"</strong> (Serial: A1B2C3) requiere <strong>limpieza interna</strong> en la <strong>Sala de reuniones 2</strong>.</p>
+        <div class="notification-actions">
+          <button class="btn-correo" onclick="enviarCorreo(this)">Enviar por correo</button>
+          <button class="btn-enterado" onclick="marcarEnterado(this)">Enterad@</button>
+        </div>
+      `;
+
+      dropdown.prepend(item);
+    }
+
+    function marcarEnterado(btn) {
+      btn.textContent = "✅ Enterado";
+      btn.disabled = true;
+      const contenedor = btn.closest(".notification-item");
+      contenedor.classList.add("leida");
+      actualizarContador(-1);
+      limpiarLeidas();
+    }
+
+    function enviarCorreo(btn) {
+      btn.textContent = "📧 Enviado";
+      btn.disabled = true;
+    }
+
+    function limpiarLeidas() {
+      const dropdown = document.getElementById("dropdown");
+      const items = Array.from(dropdown.querySelectorAll(".notification-item.leida"));
+      const visibles = items.slice(0, maxVisibleLeidas);
+      const sobrantes = items.slice(maxVisibleLeidas);
+
+      sobrantes.forEach(div => div.remove());
+
+      // Si no hay notificaciones visibles
+      const restantes = dropdown.querySelectorAll(".notification-item");
+      if (restantes.length === 0) {
+        const mensaje = document.createElement("div");
+        mensaje.id = "noNotifications";
+        mensaje.className = "no-notifications";
+        mensaje.textContent = "No hay notificaciones.";
+        dropdown.appendChild(mensaje);
+      }
+    }
+
+    document.addEventListener("click", function (e) {
+      const dropdown = document.getElementById("dropdown");
+      const btn = document.querySelector(".notification-btn");
+      if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  </script>
+</body>
+</html>
