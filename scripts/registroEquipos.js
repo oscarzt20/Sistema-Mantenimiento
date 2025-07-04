@@ -95,6 +95,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const inputs = form.querySelectorAll("input, textarea, select, button");
         inputs.forEach(el => el.disabled = true);
 
+        // Ocultar el botón "Crear"
+        const crearBtn = form.querySelector("button[type='submit']");
+        if (crearBtn) crearBtn.style.display = "none";
+
         setTimeout(() => mensaje.style.display = "none", 4000);
       } else {
         alert("Error: " + result.message);
