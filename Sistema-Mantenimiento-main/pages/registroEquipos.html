@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registro de Equipos</title>
+    <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
+    <link rel="stylesheet" href="../Styles/estiloRegistroEquipos.css" />
+    <script src="../scripts/registroEquipos.js" defer></script>
+    <style>
+        /* Estilos para el menú desplegable */
+        /* Agregar esto en el <style> de cada archivo */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #2c3e50;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top: 100%; /* Esto hace que el menú aparezca justo debajo del botón */
+    left: 0;
+    margin-top: 0; /* Elimina cualquier margen superior */
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    height: 100%; /* Asegura que ocupe todo el alto del navbar */
+}
+
+        
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #34495e;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+       
+.navbar-menu li {
+    padding: 0 15px;
+    cursor: pointer;
+    height: 100%; /* Ocupa todo el alto del navbar */
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+    position: relative; /* Necesario para el posicionamiento del dropdown */
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="navbar-brand">Dashboard de Mantenimiento</div>
+            <ul class="navbar-menu">
+                <li><a href="dashboard.html" style="color: inherit; text-decoration: none;">INICIO</a></li>
+                <li class="dropdown active">
+                    <a href="#" style="color: inherit; text-decoration: none;">EQUIPOS</a>
+                    <div class="dropdown-content">
+                        <a href="registroEquipos.html">Registrar Equipo</a>
+                        <a href="editarEliminarEquipos.html">Editar/Eliminar Equipo</a>
+                    </div>
+                </li>
+                <li><a href="#" style="color: inherit; text-decoration: none;">MANTENIMIENTOS</a></li>
+                <li><a href="#" style="color: inherit; text-decoration: none;">REPORTES</a></li>
+                <li><a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">USUARIOS</a></li>
+            </ul>
+            <div class="navbar-notifications">
+                <button class="notification-btn">
+                    Notificaciones <span class="badge">3</span>
+                </button>
+                <div class="notification-dropdown">
+                    <div class="notification-item">Mantenimiento preventivo para Equipo A</div>
+                    <div class="notification-item">Alerta crítica en Equipo B</div>
+                    <div class="notification-item">Nuevo mantenimiento programado</div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <form id="formEquipo">
+            <h1>Registro de Equipos</h1>
+            <h2>Ingrese la información requerida*</h2>
+
+            <div class="form-container">
+                <div class="top">
+                    <label>
+                        Estado
+                        <input type="text" name="estado" readonly class="info-disabled" value="Registrado" />
+                    </label>
+                </div>
+
+                <div class="row">
+                    <div class="left">
+                        <label>
+                            Tipo de equipo*
+                            <select name="tipoEquipo" required>
+                                <option value="">Seleccione un tipo de equipo</option>
+                                <option value="PC / Laptop">PC / Laptop</option>
+                                <option value="Periférico">Periférico</option>
+                                <option value="Impresora">Impresora</option>
+                            </select>
+                        </label>
+                        <label>
+                            Nombre del equipo*
+                            <input type="text" name="nombreEquipo" required maxlength="45" />
+                        </label>
+                        <label>
+                            No. de serie*
+                            <input type="text" name="numeroSerie" required maxlength="25" />
+                        </label>
+                        <label>
+                            Descripción*
+                            <textarea name="descripcion" required maxlength="80"></textarea>
+                        </label>
+                    </div>
+
+                    <div class="right">
+                        <label>
+                            Responsable del equipo*
+                            <select name="id_usuario" required>
+                                <option value="">Seleccione un responsable</option>
+                            </select>
+                        </label>
+                        <label>
+                            Locación*
+                            <select name="id_ubicacion" required>
+                                <option value="">Seleccione una zona</option>
+                            </select>
+                        </label>
+                        <label>
+                            Fecha de ingreso*
+                            <input type="date" name="fechaIngreso" required max="" />
+                        </label>
+                        <label>
+                            Agregar foto del equipo
+                            <input type="file" name="foto" accept="image/*" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button type="button" onclick="history.back()" class="back-btn">Regresar</button>
+                <button type="submit">Crear</button>
+            </div>
+        </form>
+
+        <div id="mensaje-exito" class="mensaje-exito">Equipo registrado correctamente.</div>
+    </main>
+</body>
+</html>
