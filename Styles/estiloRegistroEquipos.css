@@ -1,0 +1,91 @@
+form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+h2 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+    flex-direction: column;
+}
+
+.top {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.left, .right {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+    min-width: 280px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #2c3e50;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f5f7fa;
+    margin-top: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+textarea {
+    height: 80px;
+    resize: none;
+}
+
+input[type="file"] {
+    margin-top: 5px;
+}
+
+select[disabled],
+textarea[disabled],
+input[disabled],
+.info-disabled {
+    background-color: #eaeaea;
+    color: #777;
+    cursor: not-allowed;
+    border: 1px dashed #bbb;
+}
+
+select {
+    background-color: #f5f7fa;
+}
+
+/* Validación visual para campos no editables informativos */
+.top input[disabled]{
+    background-color: white;
+}
+
+.info-disabled::placeholder {
+    color: #777;
+}

@@ -1,0 +1,41 @@
+/* Fuentes Inter */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Estilos personalizados para el calendario */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    background-color: #e0e0e0; /* Un gris claro para el fondo del calendario */
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.calendar-day {
+    background-color: white;
+    padding: 8px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 0.875rem; /* Pequeño para los días */
+    color: #333;
+    cursor: pointer; /* Indica que los días son clickeables */
+    transition: background-color 0.2s ease; /* Transición suave para el hover */
+}
+
+.calendar-day:hover:not(.empty):not(.font-bold) {
+    background-color: #e6e6e6; /* Un gris más oscuro al pasar el ratón */
+}
+
+.calendar-day.selected {
+    background-color: #3b82f6; /* Color azul para el día seleccionado */
+    color: white;
+    font-weight: bold;
+}
+
+.calendar-day.empty {
+    background-color: transparent;
+    cursor: default;
+}

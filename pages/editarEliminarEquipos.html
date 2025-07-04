@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aplicación Web de Mantenimiento</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="/Styles/estiloEquipoEE.css">
+    </head>
+    
+    <body class="bg-[#f5f5f5] text-[#333] min-h-screen flex flex-col">
+    
+        <header class="bg-[#2c3e50] text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold rounded">Página de Mantenimiento</h1>
+                <nav>
+                    <ul class="flex space-x-4">
+                        <li><a href="/pages/dashboard.html" class="hover:text-gray-300 rounded-md p-2">Dashboard</a></li>
+                        <li><a href="/pages/index.html" class="hover:text-gray-300 rounded-md p-2">Inicio</a></li>
+                        <li><a href="/pages/registroEquipos.html" class="hover:text-gray-300 rounded-md p-2">Equipos</a></li>
+                        <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Mantenimientos</a></li>
+                        <li><a href="#" class="hover:text-gray-300 rounded-md p-2">Reportes</a></li>
+                        <li><a href="/pages/Pantalla 12.html" class="hover:text-gray-300 rounded-md p-2">Usuarios</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+    
+        <main class="flex-grow container mx-auto p-6">
+            <section class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div class="header mb-6">
+                    <h2 class="text-3xl font-semibold text-[#333] mb-4 rounded">Editar o eliminar equipos</h2>
+                </div>
+    
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div>
+                            <label for="required-info" class="block text-sm font-medium text-gray-700 mb-1">Ingrese la
+                                información requerida*</label>
+                            <input type="text" id="required-info" placeholder="String(25)"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="team-name" class="block text-sm font-medium text-gray-700 mb-1">Nombre del
+                                equipo</label>
+                            <input type="text" id="team-name" placeholder="String(45)"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="serial-number" class="block text-sm font-medium text-gray-700 mb-1">No. de
+                                serie</label>
+                            <input type="text" id="serial-number" placeholder="String(15)"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="responsible-person" class="block text-sm font-medium text-gray-700 mb-1">Responsable
+                                del equipo</label>
+                            <input type="text" id="responsible-person" placeholder="String(75)"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Locación</label>
+                            <input type="text" id="location" placeholder="String(20)"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="description"
+                                class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                            <input type="text" id="description" placeholder="String(80)"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+    
+                    <div class="space-y-6">
+                        <div>
+                            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                            <input type="text" id="status" placeholder="String(25)"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="folio" class="block text-sm font-medium text-gray-700 mb-1">Folio</label>
+                            <input type="text" id="folio" placeholder="Int(10)"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="entry-date" class="block text-sm font-medium text-gray-700 mb-1">Fecha de
+                                ingreso</label>
+                            <input type="text" id="entry-date" placeholder="String(10)"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                readonly>
+                            <div class="calendar-grid mt-2">
+                                <div class="calendar-day font-bold">Lun</div>
+                                <div class="calendar-day font-bold">Mar</div>
+                                <div class="calendar-day font-bold">Mié</div>
+                                <div class="calendar-day font-bold">Jue</div>
+                                <div class="calendar-day font-bold">Vie</div>
+                                <div class="calendar-day font-bold">Sáb</div>
+                                <div class="calendar-day font-bold">Dom</div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                                <div class="calendar-day empty"></div>
+                            </div>
+                        </div>
+                        <div
+                            class="mt-4 flex flex-col items-center p-6 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 bg-gray-50">
+                            <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                            <p id="file-upload-text">Arrastre y suelte una imagen aquí o</p>
+                            <input type="file" id="file-upload" class="hidden" accept="image/*">
+                            <button id="select-file-button"
+                                class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                Seleccionar archivo
+                            </button>
+                            <p class="text-xs mt-1">Sube la foto del equipo</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="flex justify-center space-x-4 mt-8">
+                    <button id="save-changes-button"
+                        class="px-6 py-3 bg-[#2c3e50] text-white rounded-md hover:bg-[#34495e] focus:outline-none focus:ring-2 focus:ring-[#2c3e50] focus:ring-offset-2">
+                        Guardar Cambios
+                    </button>
+                    <button id="delete-team-button"
+                        class="px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2">
+                        Eliminar Equipo
+                    </button>
+                    <button id="go-back-button"
+                        class="px-6 py-3 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        Regresar
+                    </button>
+                </div>
+            </section>
+        </main>
+    
+        <script src="/scripts/eliminarEditar.js"></script>
+    
+        </body>
+</html>
