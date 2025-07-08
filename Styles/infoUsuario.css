@@ -1,0 +1,287 @@
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+/* Barra de navegación */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50;
+    color: white;
+    padding: 0 20px;
+    height: 60px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.navbar-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #2c3e50;
+}
+
+.navbar-menu > * {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar-notifications {
+    position: relative;
+}
+
+.notification-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.badge {
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background-color: white;
+    min-width: 250px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    z-index: 100;
+    padding: 10px 0;
+}
+
+.notification-dropdown.show {
+    display: block;
+}
+
+.notification-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.notification-item:hover {
+    background-color: #f5f7fa;
+}
+
+.btt-navbar {
+    cursor: pointer;
+    background-color: #2c3e50;
+    border-style: none;
+    color: white;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    height: 60px;
+    transition: background-color 0.3s;
+}
+
+.btt-navbar li {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    justify-content: center;
+}
+
+.btt-navbar:hover {
+    background-color: #34495e;
+}
+
+/* User Info */
+.userContainerPage {
+    position: fixed;
+    top: 15%;
+    right: 8%;
+    background-color: #344a5e;
+    border-radius: 8px;
+    width: 410px;
+    height: 200px;
+    justify-items: center;
+}
+
+.p-info {
+    color: white;
+    font-size: 20px;
+    margin: 10px;
+    margin-left: 100px;
+    text-align: center;
+}
+
+.circulo-estado {
+    width: 40px;
+    height: 40px;
+    background-color: #9acd32;
+    border-radius: 50%;
+    position: absolute;
+    right: 5%;
+    top: 70%;
+}
+
+.btt-info {
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 6px;
+}
+
+.btt-info:hover {
+    background-color: #2d6991;
+}
+
+#img-user {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-top: 10px;
+    left: 10px;
+}
+
+.dropdown-usuario {
+    position: relative;
+}
+
+.dropdown-usuario-menu {
+    display: none;
+    position: absolute;
+    background-color: #34495e;
+    top: 60px;
+    right: 0;
+    flex-direction: column;
+    z-index: 1000;
+    transition: background-color 0.3s;
+}
+
+.dropdown-usuario-menu:not(.oculto) {
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-usuario-menu button {
+    text-align: left;
+    padding: 10px 15px;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.dropdown-usuario-menu button:hover {
+    background-color: #3d566e;
+}
+
+#ref-infoUsuario {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+/* Estilos para la tabla */
+h1 {
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+
+.search-input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+.btt-nuevoUsuario {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.user-table {
+    width: 50%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.user-table-header th {
+    background-color: #3d566e;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.user-table-body tr {
+    border-bottom: 2px solid black;
+}
+
+.user-table-body td {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+.status-circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-green {
+    background-color: #9acd32;
+}
+
+.status-yellow {
+    background-color: #ffcc00;
+}
+
+.status-red {
+    background-color: #ff3333;
+}
+
+.search-container {
+    display: flex;
+    justify-content: left;
+    margin-left: 20px;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}

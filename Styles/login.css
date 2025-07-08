@@ -1,0 +1,100 @@
+body{
+    background: #2c3e50;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    margin: 0;
+    display: flex;
+}
+
+.mainContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.loginContainer{
+    background: white;
+    border-radius: 10%;
+    text-align: center;
+    width: 300px;
+    padding: 20px;
+    height: 40%;
+}
+
+.registerContainer{
+    background: white;
+    border-radius: 30px;
+    text-align: center;
+    width: 300px;
+    padding: 20px;
+    height: 8%;
+}
+
+#btt_iniciar_sesion{
+    position: relative;
+    top: 20px;
+}
+
+.p_login{
+    font-size: 20px;
+}
+
+.navLogin{
+    position: relative;
+    bottom: 30px;
+}
+
+#img_fastbank{
+    width: 250px;
+    position: relative;
+    bottom: 20px;
+}
+
+.title{
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+h1{
+    color: #333;
+}
+
+input[type="text"], input[type="password"]{
+    width: 100%;
+    border: 1px solid #000000;
+    flex: auto;
+    border-radius: 5px;
+}
+
+input[type="submit"]{
+    background-color: #619ac0;
+    color: white;
+    width: 50%;
+    cursor: default;
+    border: none;
+    font-size: 19px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+input[type="submit"]:hover{
+    background-color: #4b91c0;
+}
+a{
+    color: blue;
+}
+a:hover{
+    text-decoration: dotted;
+}
+
+p{
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
