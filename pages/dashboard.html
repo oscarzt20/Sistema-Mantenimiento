@@ -84,53 +84,68 @@
         <div class="row">
             <!-- Dispositivos Activos -->
             <div class="card">
-                <h3>Dispositivos Activos</h3>
-                <div class="active-devices">
-                    <div class="device online">
-                        <span class="device-name">Equipo A</span>
-                        <span class="device-status">En operación</span>
-                    </div>
-                    <div class="device online">
-                        <span class="device-name">Equipo B</span>
-                        <span class="device-status">En operación</span>
-                    </div>
-                    <div class="device offline">
-                        <span class="device-name">Equipo C</span>
-                        <span class="device-status">Inactivo</span>
-                    </div>
-                    <div class="device online">
-                        <span class="device-name">Equipo D</span>
-                        <span class="device-status">En operación</span>
-                    </div>
-                    <div class="device warning">
-                        <span class="device-name">Equipo E</span>
-                        <span class="device-status">Advertencia</span>
-                    </div>
-                </div>
-            </div>
+    <h3>Dispositivos Activos</h3>
+    <div class="active-devices">
+        <?php
+        include '../scripts/conexion.php';
+        $query = "SELECT e.nombreEquipo, es.estadoEquipos 
+                  FROM equipo e 
+                  JOIN estado es ON e.id_estado = es.id_estado
+                  LIMIT 5";
+        $result = $conexion->query($query);
+        
+        while($row = $result->fetch_assoc()) {
+            $statusClass = strtolower($row['estadoEquipos']) == 'operativo' ? 'online' : 'offline';
+            echo '<div class="device '.$statusClass.'">
+                    <span class="device-name">'.$row['nombreEquipo'].'</span>
+                    <span class="device-status">'.$row['estadoEquipos'].'</span>
+                  </div>';
+        }
+        ?>
+    </div>
+</div>
 
             <!-- Mantenimientos Hoy -->
             <div class="card">
-                <h3>Mantenimientos Hoy</h3>
-                <div class="maintenance-today">
-                    <div class="maintenance-item">
-                        <span class="time">08:00 AM</span>
-                        <span class="description">Revisión preventiva</span>
-                        <span class="equipo">Equipo A</span>
-                    </div>
-                    <div class="maintenance-item">
-                        <span class="time">10:30 AM</span>
-                        <span class="description">Cambio de piezas</span>
-                        <span class="equipo">Equipo B</span>
-                    </div>
-                    <div class="maintenance-item">
-                        <span class="time">02:00 PM</span>
-                        <span class="description">Calibración</span>
-                        <span class="equipo">Equipo D</span>
-                    </div>
-                </div>
-            </div>
-
+    <h3>Mantenimientos Hoy</h3>
+    <div class="maintenance-today">
+        <?php
+        include '../scripts/conexion.php';
+        
+        // Obtener la fecha actual
+        $hoy = date('Y-m-d');
+        
+        // Consulta para obtener los mantenimientos de hoy
+        $query = "SELECT m.fecha_programada, m.tipo_tarea, m.comentario, e.nombreEquipo 
+                  FROM mantenimiento m
+                  JOIN equipo e ON m.id_equipo = e.id_equipo
+                  WHERE DATE(m.fecha_programada) = ?
+                  ORDER BY m.fecha_programada ASC";
+        
+        $stmt = $conexion->prepare($query);
+        $stmt->bind_param("s", $hoy);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                // Formatear la hora
+                $hora = date('H:i A', strtotime($row['fecha_programada']));
+                
+                echo '<div class="maintenance-item">
+                        <span class="time">'.$hora.'</span>
+                        <span class="description">'.$row['tipo_tarea'].' - '.$row['comentario'].'</span>
+                        <span class="equipo">'.$row['nombreEquipo'].'</span>
+                      </div>';
+            }
+        } else {
+            echo '<div class="maintenance-item">
+                    <span class="no-maintenance">No hay mantenimientos programados para hoy</span>
+                  </div>';
+        }
+        ?>
+    </div>
+</div>
             <!-- Alertas Críticas -->
             <div class="card critical-alerts">
                 <h3>Alertas Críticas</h3>

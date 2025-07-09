@@ -7,20 +7,19 @@ body {
     color: #333;
 }
 
-/* Barra de navegación */
 .navbar {
+    background-color: #2c3e50;
+    color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #2c3e50;
-    color: white;
     padding: 0 20px;
     height: 60px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
@@ -29,12 +28,13 @@ body {
     list-style: none;
     margin: 0;
     padding: 0;
+    height: 100%;
 }
 
 .navbar-menu li {
     padding: 0 15px;
     cursor: pointer;
-    height: 60px;
+    height: 100%;
     display: flex;
     align-items: center;
     transition: background-color 0.3s;
@@ -42,10 +42,6 @@ body {
 
 .navbar-menu li:hover {
     background-color: #34495e;
-}
-
-.navbar-menu li.active {
-    background-color: #3498db;
 }
 
 .navbar-notifications {
@@ -63,34 +59,24 @@ body {
     align-items: center;
 }
 
-.badge {
+.notification-btn .badge {
     background-color: #e74c3c;
-    color: white;
     border-radius: 50%;
     padding: 2px 6px;
     font-size: 0.8rem;
     margin-left: 5px;
 }
 
-.badge.blue {
-    background-color: #3498db;
-}
-
-.badge.red {
-    background-color: #e74c3c;
-}
-
 .notification-dropdown {
     display: none;
     position: absolute;
     right: 0;
-    top: 40px;
     background-color: white;
     min-width: 250px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    border-radius: 4px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     z-index: 100;
-    padding: 10px 0;
+    border-radius: 4px;
+    overflow: hidden;
 }
 
 .notification-dropdown.show {
@@ -100,16 +86,17 @@ body {
 .notification-item {
     padding: 10px 15px;
     border-bottom: 1px solid #eee;
-    cursor: pointer;
+    color: #333;
 }
 
 .notification-item:hover {
-    background-color: #f5f7fa;
+    background-color: #f8f9fa;
 }
 
-/* Contenedor principal */
 .container {
     padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .row {
@@ -119,11 +106,10 @@ body {
     gap: 20px;
 }
 
-/* Tarjetas */
 .card {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     padding: 20px;
     flex: 1;
     min-width: 300px;
@@ -131,19 +117,9 @@ body {
 
 .card h3 {
     margin-top: 0;
-    margin-bottom: 20px;
     color: #2c3e50;
-    font-size: 1.1rem;
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.status-count {
-    font-size: 0.9rem;
-    color: #7f8c8d;
 }
 
 /* Dispositivos Activos */
@@ -156,17 +132,9 @@ body {
 .device {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    padding: 8px 12px;
     border-radius: 4px;
     background-color: #f8f9fa;
-}
-
-.device-name {
-    font-weight: 500;
-}
-
-.device-status {
-    font-size: 0.9rem;
 }
 
 .device.online {
@@ -174,11 +142,16 @@ body {
 }
 
 .device.offline {
-    border-left: 4px solid #95a5a6;
+    border-left: 4px solid #e74c3c;
 }
 
-.device.warning {
-    border-left: 4px solid #f39c12;
+.device-name {
+    font-weight: 500;
+}
+
+.device-status {
+    color: #7f8c8d;
+    font-size: 0.9rem;
 }
 
 /* Mantenimientos Hoy */
@@ -190,85 +163,85 @@ body {
 
 .maintenance-item {
     display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    flex-direction: column; /* Cambiamos a columna para mejor disposición */
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
 }
 
-.maintenance-item:last-child {
-    border-bottom: none;
-}
 
 .time {
     font-weight: bold;
     color: #3498db;
+    min-width: 60px;
 }
 
 .description {
     flex-grow: 1;
-    padding: 0 10px;
+    margin: 0 10px;
 }
 
 .equipo {
-    background-color: #eaf2f8;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.no-maintenance {
+    color: #7f8c8d;
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
 }
 
 /* Alertas Críticas */
 .critical-alerts {
-    border-top: 3px solid #e74c3c;
+    background-color: #fff8f8;
 }
 
 .alert-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
     display: flex;
     align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .alert-type {
-    background-color: #e74c3c;
-    color: white;
     padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    border-radius: 3px;
+    font-weight: bold;
     margin-right: 10px;
 }
 
-.alert-message {
-    font-size: 0.9rem;
-}
-
-/* Tabla de mantenimientos */
-.table-card {
-    flex: 2;
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.table-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.btn {
-    background-color: #3498db;
+.error {
+    background-color: #ff5252;
     color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.9rem;
+}
+
+.warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+.info {
+    background-color: #2196f3;
+    color: white;
+}
+
+.alert-message {
+    flex-grow: 1;
+}
+
+.no-alerts {
+    color: #7f8c8d;
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Tabla de Próximos Mantenimientos */
+.table-card {
+    flex: 100%;
 }
 
 .maintenance-table {
@@ -285,99 +258,39 @@ body {
 
 .maintenance-table th {
     background-color: #f8f9fa;
-    color: #7f8c8d;
-    font-weight: 500;
+    color: #2c3e50;
+    font-weight: 600;
 }
 
 .maintenance-table tr:hover {
-    background-color: #f5f7fa;
-}
-
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.action-btn {
-    background: none;
-    border: none;
-    color: #7f8c8d;
-    cursor: pointer;
-    padding: 5px;
-    margin: 0 2px;
-}
-
-.action-btn:hover {
-    color: #3498db;
-}
-
-.badge-preventivo {
-    background-color: #2ecc71;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-}
-
-.badge-correctivo {
-    background-color: #e74c3c;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-}
-
-.badge-calibracion {
-    background-color: #f39c12;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-}
-
-.table-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 15px;
-    font-size: 0.9rem;
-    color: #7f8c8d;
-}
-
-.pagination {
-    display: flex;
-    gap: 5px;
-}
-
-.pagination-btn {
     background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.pagination-btn.active {
-    background-color: #3498db;
-    color: white;
-    border-color: #3498db;
 }
 
 /* Gráfico */
 .chart-card {
-    flex: 2;
-    min-height: 300px;
+    flex: 100%;
+    height: 400px;
 }
 
-canvas {
+.chart-card canvas {
     width: 100% !important;
     height: 100% !important;
 }
+
+  .chart-card {
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        background: white;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .chart-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    #maintenanceChart {
+        height: 400px !important;
+        width: 100% !important;
+    }
