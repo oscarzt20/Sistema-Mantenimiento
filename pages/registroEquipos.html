@@ -52,11 +52,11 @@
                 </li> <!--pantalla 12 es Registro de Usuarios -->
             </ul>
             <div class="navbar-notifications">
-                <button class="notification-btn">Notificaciones <span class="badge">3</span></button>
-                <div class="notification-dropdown">
-                    <div class="notification-item">Mantenimiento preventivo para Equipo A</div>
-                    <div class="notification-item">Alerta crítica en Equipo B</div>
-                    <div class="notification-item">Nuevo mantenimiento programado</div>
+                <button class="notification-btn" onclick="toggleDropdown()">
+                Notificaciones <span id="notification-badge" class="badge">0</span>
+                </button>
+                <div class="notification-dropdown" id="dropdown">
+                <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
                 </div>
             </div>
         </nav>
