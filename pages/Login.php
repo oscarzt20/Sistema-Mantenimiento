@@ -1,53 +1,53 @@
 <?php
-        session_start();
-        // conexión
-        $host = "localhost";
-        $user = "root";
-        $password = "";
-        $database = "mantenimientobd";
+    session_start();
+    // conexión
+    $host = "localhost";
+    $user = "root";
+    $password = "";
+    $database = "mantenimientobd";
 
-        $connection = new mysqli($host, $user, $password, $database);
+    $connection = new mysqli($host, $user, $password, $database);
 
-        if ($connection->connect_error)
-            die("Error en la conexión: " . $connection->connect_error);
+    if ($connection->connect_error)
+        die("Error en la conexión: " . $connection->connect_error);
 
-        // verifica si los datos fueron enviados por POST
-        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["user"]) && isset($_POST["password"])) {
-            $usuario = $_POST["user"];
-            $contrasena = $_POST["password"];
+    // verifica si los datos fueron enviados por POST
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["user"]) && isset($_POST["password"])) {
+        $usuario = $_POST["user"];
+        $contrasena = $_POST["password"];
 
-            // consulta preparada para evitar inyección SQL
-            $query = $connection->prepare("SELECT id_usuario, correo, contraseña, nombreUsuario FROM usuario WHERE correo = ?");
-            $query->bind_param("s", $usuario);
-            $query->execute();
-            $resultado = $query->get_result();
+        // consulta preparada para evitar inyección SQL
+        $query = $connection->prepare("SELECT id_usuario, correo, contraseña, nombreUsuario FROM usuario WHERE correo = ?");
+        $query->bind_param("s", $usuario);
+        $query->execute();
+        $resultado = $query->get_result();
 
-            if ($resultado->num_rows > 0) {
-                $datosUsuario = $resultado->fetch_assoc();
+        if ($resultado->num_rows > 0) {
+            $datosUsuario = $resultado->fetch_assoc();
 
-                // verifica contraseña
-                if ($contrasena === $datosUsuario["contraseña"]) {
-                    $_SESSION["id_usuario"] = $datosUsuario["id_usuario"];
-                    $_SESSION["correo"] = $datosUsuario["correo"];
-                    $_SESSION["nombreUsuario"] = $datosUsuario["nombreUsuario"];
-                    
-                    header("Location: dashboard.php");
-                    exit();
-                } else {
-                    mostrarError("Contraseña incorrecta");
-                }
+            // verifica contraseña
+            if ($contrasena === $datosUsuario["contraseña"]) {
+                $_SESSION["id_usuario"] = $datosUsuario["id_usuario"];
+                $_SESSION["correo"] = $datosUsuario["correo"];
+                $_SESSION["nombreUsuario"] = $datosUsuario["nombreUsuario"];
+                
+                header("Location: dashboard.php");
+                exit();
             } else {
-                mostrarError("Usuario no encontrado");
+                mostrarError("Contraseña incorrecta");
             }
-
-            $query->close();
-
+        } else {
+            mostrarError("Usuario no encontrado");
         }
 
-        function mostrarError($mensaje) {
-            
-            echo "<dialog open style='color:red; padding: 1em; border: 1px solid red;'>$mensaje</dialog>";
-        }
+        $query->close();
+
+    }
+
+    function mostrarError($mensaje) {
+        
+        echo "<dialog open style='color:red; padding: 1em; border: 1px solid red;'>$mensaje</dialog>";
+    }
 
 ?>
 
