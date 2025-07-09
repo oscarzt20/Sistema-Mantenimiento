@@ -22,10 +22,10 @@ $resultado = $conexion->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard de Mantenimiento</title>
-    <link rel="stylesheet" href="/Sistema-Mantenimiento-main/Styles/infoUsuario.css">
+    <link rel="stylesheet" href="../Styles/infoUsuario.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/Sistema-Mantenimiento-main/scripts/infoUsuario.js" defer></script>
-    <script src="/Sistema-Mantenimiento-main/scripts/dashboard.js" defer></script>
+    <script src="../scripts/infoUsuario.js" defer></script>
+    <script src="../scripts/dashboard.js" defer></script>
     <style>
         /* Estilos para el menú despleegable */
     .dropdown-content {
@@ -202,7 +202,7 @@ $resultado = $conexion->query($sql);
     <div class="userContainer oculto">
         <button id="btt-cerrarInfo">x</button>
         <nav class="userInfo">
-            <img src="/Sistema-Mantenimiento-main/img/persona.jpg" id="img-user" alt="Usuario">
+            <img src="../img/persona.jpg" id="img-user" alt="Usuario">
             <p class="p-info" id="info-nombre">Nombre</p>
             <p class="p-info" id="info-correo">Correo Electrico</p>
             <p class="p-info" id="info-estado">Estado</p>
@@ -265,7 +265,7 @@ $resultado = $conexion->query($sql);
 
     <div class="userContainerPage">
         <nav class="userInfo">
-            <img src="/Sistema-Mantenimiento-main/img/persona.jpg" id="img-user" alt="Usuario">
+            <img src="../img/persona.jpg" id="img-user" alt="Usuario">
             <p class="p-info" id="info-nombreMain">Nombre</p>
             <p class="p-info" id="info-correoMain">Correo Electronico</p>
             <div class="circulo-estado"></div>
@@ -280,7 +280,7 @@ $resultado = $conexion->query($sql);
         });
 
         document.addEventListener("DOMContentLoaded", () => {
-            fetch("/Sistema-Mantenimiento-main/scripts/obtenerUsuario.php")
+            fetch("../scripts/obtenerUsuario.php")
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "ok") {
@@ -313,7 +313,7 @@ $resultado = $conexion->query($sql);
 
         function cerrarSesion() {
 
-            window.location.href = '/Sistema-Mantenimiento-main/scripts/cerrarSesion.php';
+            window.location.href = '../scripts/cerrarSesion.php';
         }
 
         btnCambiarCuenta.addEventListener('click', cerrarSesion);

@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/Sistema-Mantenimiento-main/Styles/registro.css">
+    <link rel="stylesheet" href="../Styles/registro.css">
     <title>Registro</title>
 </head>
 <body>
     <div class="container">
         <div class="title">
-            <img src="/Sistema-Mantenimiento-main/img/fastbank.jpg" alt="" id="img_fastbank">
+            <img src="../img/fastbank.jpg" alt="" id="img_fastbank">
         </div>
         <form class="register" method="POST">
             <h1 id="lbl_nuevo_registro">Nuevo Registro</h1><br>
@@ -24,7 +24,7 @@
             <p>Correo electrónico</p>
             <input type="email" name="newEmail" placeholder="Correo Electrónico" required><br><br><br>
             <button type="submit" id="registrarse">Enviar</button><br><br>
-            <a href="/Sistema-Mantenimiento-main/pages/Login.php">Pantalla de Login</a>
+            <a href="../pages/Login.php">Pantalla de Login</a>
         </form>
     </div>
 

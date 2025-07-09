@@ -56,14 +56,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/Sistema-Mantenimiento-main/Styles/login.css">
+    <link rel="stylesheet" href="../Styles/login.css">
     <title>login</title>
 </head>
 <body>
     <div class="mainContainer">
         <div class="loginContainer">
             <div class="title">
-                <img src="/Sistema-Mantenimiento-main/img/fastbank.jpg" alt="" id="img_fastbank">
+                <img src="../img/fastbank.jpg" alt="" id="img_fastbank">
             </div>
             <form method="POST" class="navLogin">
                 <p class="p_login">Usuario</p>
@@ -75,8 +75,8 @@
         </div>
         <div class="registerContainer">
             <nav>
-                <p>¿Aún no estás registrado?</p><a href="/Sistema-Mantenimiento-main/pages/Registro.php">Registrate </a>
-                <a href="/Sistema-Mantenimiento-main/pages/dashboard.php"></a>
+                <p>¿Aún no estás registrado?</p><a href="../pages/Registro.php">Registrate </a>
+                <a href="../pages/dashboard.php"></a>
             </nav>
         </div>
     </div>

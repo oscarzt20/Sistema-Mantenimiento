@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard de Mantenimiento</title>
-    <link rel="stylesheet" href="/Sistema-Mantenimiento-main/Styles/dashboard.css">
+    <link rel="stylesheet" href="../Styles/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js  "></script>
-    <script src="/Sistema-Mantenimiento-main/scripts/dashboard.js" defer></script>
+    <script src="../scripts/dashboard.js" defer></script>
     <style>
         /* Estilos para el menú despleegable */
     .dropdown-content {
@@ -185,7 +185,7 @@
     <div class="userContainer oculto">
         <button id="btt-cerrarInfo">x</button>
         <nav class="userInfo">
-            <img src="/Sistema-Mantenimiento-main/img/persona.jpg" id="img-user" alt="Usuario">
+            <img src="../img/persona.jpg" id="img-user" alt="Usuario">
             <p class="p-info" id="info-nombre">Nombre</p>
             <p class="p-info" id="info-correo">Correo Electrónico</p>
             <p class="p-info" id="info-estado">Estado</p>
@@ -318,7 +318,7 @@
     <script>
 
         document.addEventListener("DOMContentLoaded", () => {
-            fetch("/Sistema-Mantenimiento-main/scripts/obtenerUsuario.php", {
+            fetch("../scripts/obtenerUsuario.php", {
             credentials: 'include'
             })
                 .then(response => response.json())
@@ -373,7 +373,7 @@
 
         function cerrarSesion() {
 
-            window.location.href = '/Sistema-Mantenimiento-main/scripts/cerrarSesion.php';
+            window.location.href = '../scripts/cerrarSesion.php';
         }
 
         btnCambiarCuenta.addEventListener('click', cerrarSesion);
