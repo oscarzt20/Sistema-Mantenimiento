@@ -1,16 +1,17 @@
 <?php
-    // Variables necesarias para la BD
-    $host = "localhost";
-    $user = "root";
-    $password = "";
-    $database = "mantenimientobd";
+$servername = "localhost";
+$username = "root"; // Usuario por defecto en XAMPP
+$password = ""; // Contraseña por defecto en XAMPP (vacía)
+$dbname = "mantenimiento";
 
-    // constructor
-    $connection = new mysqli($host, $user, $password, $database);
+// Crear conexión
+$conexion = new mysqli($servername, $username, $password, $dbname);
 
-    if ($connection->connect_error)
-    {
-        // Método die
-        die("Connection failed".$connection->connect_error);
-    }
+// Verificar conexión
+if ($conexion->connect_error) {
+    die("Conexión fallida: " . $conexion->connect_error);
+}
+
+// Establecer el conjunto de caracteres
+$conexion->set_charset("utf8mb4");
 ?>
