@@ -25,7 +25,7 @@ $id_usuario = intval($_POST["id_usuario"]);
 $id_estado = 1;
 
 // Validación de número de serie duplicado
-$check = $connection->prepare("SELECT 1 FROM equipos WHERE numeroSerie = ?");
+$check = $connection->prepare("SELECT 1 FROM equipo WHERE numeroSerie = ?");
 $check->bind_param("s", $serie);
 $check->execute();
 $check->store_result();
@@ -36,7 +36,7 @@ if ($check->num_rows > 0) {
 $check->close();
 
 $insert = $connection->prepare(
-    "INSERT INTO equipos (tipoEquipo, nombreEquipo, numeroSerie, descripcion, fechaIngreso, id_ubicacion, id_estadoEquipo)
+    "INSERT INTO equipo (tipoEquipo, nombreEquipo, numeroSerie, descripcion, fechaIngreso, id_ubicacion, id_estado)
      VALUES (?, ?, ?, ?, ?, ?, ?)"
 );
 $insert->bind_param("ssssssi", $tipo, $nombre, $serie, $desc, $fecha, $id_ubicacion, $id_estado);

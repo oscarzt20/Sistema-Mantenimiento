@@ -111,6 +111,50 @@ main {
     background-color: #f5f7fa;
 }
 
+/* Estilos para el menú despleegable */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #2c3e50;  
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top: 100%; /* Esto haace quee eel menú aparezca justo debajo del botón */
+    left: 0;
+    margin-top: 0; /* Elimina ualquier margen superior */
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    height: 100%; /* Asegura que ocupe todo el alto del navbar */
+}
+        
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+        
+.dropdown-content a:hover {
+    background-color: #34495e;
+}
+        
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+        
+.navbar-menu li {
+    padding: 0 15px;
+    cursor: pointer;
+    height: 100%; /* Ocupa todo el alto del navbar */
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+    position: relative; /* Necesario para el posicionamiento del dropdown */
+}
+
 /* Contenedor principal */
 .container {
     padding: 20px;
