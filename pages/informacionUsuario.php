@@ -295,7 +295,7 @@ $resultado = $conexion->query($sql);
                         document.getElementById("info-rolMain").textContent = data.rol;
                     } else {
                         alert("Sesión no iniciada");
-                        window.location.href = "login.html";
+                        window.location.href = "login.php";
                     }
                 })
                 .catch(error => {
