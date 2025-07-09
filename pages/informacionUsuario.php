@@ -1,6 +1,6 @@
 <?php
 // Conexión a la BD
-$conexion = new mysqli("localhost", "root", "", "mantenimiento");
+$conexion = new mysqli("localhost", "root", "", "mantenimientobd");
 if ($conexion->connect_error) {
     die("Conexión fallida: " . $conexion->connect_error);
 }
