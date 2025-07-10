@@ -284,6 +284,7 @@
 </head>
 
 <body>
+
     <!-- Barra de navegación -->
     <nav class="navbar">
         <div class="navbar-brand">Dashboard de Mantenimiento</div>
@@ -338,39 +339,32 @@
             <!-- Tarjeta de programar mantenimientos -->
             <div class="card1">
                 <h3>Programar Mantenimientos</h3>
-                <form id="maintenance-form">
+                <form id="maintenance-form" action="procesar_mantenimiento.php" method="POST">
                     <label for="date">Fecha</label>
-                    <input type="date" id="date" name="date">
+                    <input type="date" id="date" name="fecha">
 
-                    <label for="technician">Técnico</label>
-                    <select id="technician" name="technician">
+                    <label for="id_equipo">ID del equipo</label>
+                    <input type="number" id="id_equipo" name="id_equipo">
+
+                    <label for="estado">Estado</label>
+                    <select id="estado" name="estado">
                         <option value="">Seleccione una opción</option>
-                        <option value="tecnic1">Técnico 1</option>
-                        <option value="tecnic2">Técnico 2</option>
+                        <option value="Programado">Programado</option>
+                        <option value="Revisión">Revisión</option>
                     </select>
 
-                    <label for="type">Tipo de Mantenimiento</label>
-                    <select id="type" name="type">
-                        <option value="">Seleccione una opción</option>
-                        <option value="preventivo">Preventivo</option>
-                        <option value="correctivo">Correctivo</option>
-                    </select>
+                    <label for="tipo_tarea">Tipo de tarea</label>
+                    <input type="text" id="tipo_tarea" name="tipo_tarea" placeholder="String(45)*">
 
-                    <label for="comments">Comentarios</label>
-                    <textarea id="comments" name="comments" rows="4"></textarea>
+                    <label for="comentario">Comentarios</label>
+                    <input type="text" id="comentario" name="comentario" placeholder="String(100)*">
 
-                    <button type="submit" class="create-button">Guardar</button>
+
                 </form>
+                <button type="submit" class="create-button">Guardar</button>
             </div>
 
-            <!-- Información del equipo -->
-            <div class="card2">
-                <div class="user-photo">
-                    <img src="https://via.placeholder.com/150 " alt="Equipo">
-                </div>
-                <p><strong>**iMac 27** (Serial: A1B2C3)</strong></p>
-                <p>Ubicación: **Sala de reuniones 2**</p>
-            </div>
+
         </div>
     </div>
 </body>

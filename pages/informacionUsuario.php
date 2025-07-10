@@ -1,20 +1,20 @@
 <?php
 // Conexión a la BD
-$conexion = new mysqli("localhost", "root", "", "mantenimientobd");
-if ($conexion->connect_error) {
-    die("Conexión fallida: " . $conexion->connect_error);
+$connection = new mysqli("localhost", "root", "", "mantenimientobd");
+if ($connection->connect_error) {
+    die("Conexión fallida: " . $connection->connect_error);
 }
 
 // Obtener el valor de búsqueda si existe
 $busqueda = "";
 if (isset($_GET['buscar'])) {
-    $busqueda = $conexion->real_escape_string($_GET['buscar']);
+    $busqueda = $connection->real_escape_string($_GET['buscar']);
     $sql = "SELECT * FROM usuario WHERE nombreUsuario LIKE '%$busqueda%' OR correo LIKE '%$busqueda%'";
 } else {
     $sql = "SELECT * FROM usuario";
 }
 
-$resultado = $conexion->query($sql);
+$resultado = $connection->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="es">

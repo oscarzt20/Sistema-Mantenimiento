@@ -92,7 +92,7 @@
                   FROM equipo e 
                   JOIN estado es ON e.id_estado = es.id_estado
                   LIMIT 5";
-        $result = $conexion->query($query);
+        $result = $connection->query($query);
         
         while($row = $result->fetch_assoc()) {
             $statusClass = strtolower($row['estadoEquipos']) == 'operativo' ? 'online' : 'offline';
@@ -122,7 +122,7 @@
                   WHERE DATE(m.fecha_programada) = ?
                   ORDER BY m.fecha_programada ASC";
         
-        $stmt = $conexion->prepare($query);
+        $stmt = $connection->prepare($query);
         $stmt->bind_param("s", $hoy);
         $stmt->execute();
         $result = $stmt->get_result();
