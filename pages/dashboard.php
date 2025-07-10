@@ -192,11 +192,11 @@
             <div class="notification-dropdown">
                 <?php
                 include '../scripts/conexion.php';
-                $query = "SELECT mensaje FROM notificacion ORDER BY fecha_envio DESC LIMIT 3";
+                $query = "SELECT contenido FROM reporte ORDER BY fecha_creacion DESC LIMIT 3";
                 $result = $connection->query($query);
                 
                 while($row = $result->fetch_assoc()) {
-                    echo '<div class="notification-item">'.$row['mensaje'].'</div>';
+                    echo '<div class="notification-item">'.$row['contenido'].'</div>';
                 }
                 ?>
             </div>
@@ -224,6 +224,7 @@
                 <h3>Dispositivos Activos</h3>
                 <div class="active-devices">
                     <?php
+                    include '../scripts/conexion.php';
                     $query = "SELECT e.nombreEquipo, es.estadoEquipos 
                               FROM equipo e 
                               JOIN estado es ON e.id_estado = es.id_estado
@@ -243,39 +244,41 @@
 
             <!-- Mantenimientos Hoy -->
             <div class="card">
-    <h3>Mantenimientos Hoy</h3>
-    <div class="maintenance-today">
-        <?php
-        $hoy = date('Y-m-d');
-        $query = "SELECT m.fecha_programada, m.tipo_tarea, m.comentario, e.nombreEquipo, 
-                 u.nombreUsuario, u.apellidoP 
-                 FROM mantenimiento m
-                 JOIN equipo e ON m.id_equipo = e.id_equipo
-                 JOIN usuario u ON m.id_usuario = u.id_usuario
-                 WHERE DATE(m.fecha_programada) = ?
-                 ORDER BY m.fecha_programada ASC";
-        
-        $stmt = $connection->prepare($query);
-        $stmt->bind_param("s", $hoy);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                // Eliminamos la línea que formatea la hora
-                echo '<div class="maintenance-item">
-                        <span class="description">'.$row['tipo_tarea'].' - '.$row['comentario'].'</span>
-                        <span class="equipo">'.$row['nombreEquipo'].' ('.$row['nombreUsuario'].' '.$row['apellidoP'].')</span>
-                      </div>';
-            }
-        } else {
-            echo '<div class="maintenance-item">
-                    <span class="no-maintenance">No hay mantenimientos programados para hoy</span>
-                  </div>';
-        }
-        ?>
-    </div>
-</div>
+                <h3>Mantenimientos Hoy</h3>
+                <div class="maintenance-today">
+                    <?php
+                    $hoy = date('Y-m-d');
+                    $query = "SELECT m.fecha_programada, m.tipo_tarea, m.estado, 
+                             e.nombreEquipo, u.nombreUsuario, u.apellidoP 
+                             FROM mantenimiento m
+                             JOIN equipo e ON m.id_equipo = e.id_equipo
+                             JOIN usuario u ON m.id_usuario = u.id_usuario
+                             WHERE DATE(m.fecha_programada) = ?
+                             ORDER BY m.fecha_programada ASC
+                             LIMIT 5";
+                    
+                    $stmt = $connection->prepare($query);
+                    $stmt->bind_param("s", $hoy);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    
+                    if ($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                            $hora = date('H:i A', strtotime($row['fecha_programada']));
+                            echo '<div class="maintenance-item">
+                                    <span class="time">'.$hora.'</span>
+                                    <span class="description">'.$row['tipo_tarea'].' - '.$row['estado'].'</span>
+                                    <span class="equipo">'.$row['nombreEquipo'].' ('.$row['nombreUsuario'].' '.$row['apellidoP'].')</span>
+                                  </div>';
+                        }
+                    } else {
+                        echo '<div class="maintenance-item">
+                                <span class="no-maintenance">No hay mantenimientos programados para hoy</span>
+                              </div>';
+                    }
+                    ?>
+                </div>
+            </div>
 
             <!-- Alertas Críticas -->
             <div class="card critical-alerts">
@@ -383,149 +386,33 @@
             });
 
             // Obtener datos para el gráfico
-           // Obtener datos para el gráfico
-fetch("../scripts/obtenerDatosGrafico.php")
-.then(response => response.json())
-.then(data => {
-    const ctx = document.getElementById('maintenanceChart').getContext('2d');
-    const maintenanceChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: data.meses,
-            datasets: [{
-                label: 'Mantenimientos realizados',
-                data: data.cantidades,
-                backgroundColor: [
-                    'rgba(75, 192, 192, 0.7)',
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(153, 102, 255, 0.7)',
-                    'rgba(255, 159, 64, 0.7)',
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(54, 162, 235, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)'
-                ],
-                borderWidth: 1,
-                borderRadius: 6,
-                borderSkipped: false,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        color: '#333',
-                        font: {
-                            size: 14,
-                            family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-                        },
-                        padding: 20
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    titleFont: {
-                        size: 14,
-                        weight: 'bold'
+            fetch("../scripts/obtenerDatosGrafico.php")
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('maintenanceChart').getContext('2d');
+                const maintenanceChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.meses,
+                        datasets: [{
+                            label: 'Mantenimientos realizados',
+                            data: data.cantidades,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
                     },
-                    bodyFont: {
-                        size: 12
-                    },
-                    padding: 10,
-                    cornerRadius: 5,
-                    displayColors: true,
-                    callbacks: {
-                        label: function(context) {
-                            return `${context.dataset.label}: ${context.raw}`;
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                },
-                title: {
-                    display: true,
-                    text: 'Mantenimientos por Mes',
-                    color: '#2c3e50',
-                    font: {
-                        size: 18,
-                        weight: 'bold',
-                        family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-                    },
-                    padding: {
-                        top: 10,
-                        bottom: 20
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.1)',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        color: '#7f8c8d',
-                        font: {
-                            size: 12
-                        },
-                        stepSize: 5
-                    },
-                    title: {
-                        display: true,
-                        text: 'Cantidad de Mantenimientos',
-                        color: '#7f8c8d',
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        }
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false,
-                        drawBorder: false
-                    },
-                    ticks: {
-                        color: '#7f8c8d',
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'Meses',
-                        color: '#7f8c8d',
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        }
-                    }
-                }
-            },
-            animation: {
-                duration: 1500,
-                easing: 'easeInOutQuart'
-            },
-            elements: {
-                bar: {
-                    hoverBackgroundColor: 'rgba(54, 162, 235, 0.9)',
-                    hoverBorderColor: 'rgba(54, 162, 235, 1)',
-                    hoverBorderWidth: 2
-                }
-            }
-        }
-    });
-});
+                });
+            });
+
             // Mostrar/ocultar notificaciones
             document.querySelector('.notification-btn').addEventListener('click', function() {
                 document.querySelector('.notification-dropdown').classList.toggle('show');
