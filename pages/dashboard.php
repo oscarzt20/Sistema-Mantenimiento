@@ -193,7 +193,7 @@
                 <?php
                 include '../scripts/conexion.php';
                 $query = "SELECT mensaje FROM notificacion ORDER BY fecha_envio DESC LIMIT 3";
-                $result = $conexion->query($query);
+                $result = $connection->query($query);
                 
                 while($row = $result->fetch_assoc()) {
                     echo '<div class="notification-item">'.$row['mensaje'].'</div>';
@@ -228,7 +228,7 @@
                               FROM equipo e 
                               JOIN estado es ON e.id_estado = es.id_estado
                               LIMIT 5";
-                    $result = $conexion->query($query);
+                    $result = $connection->query($query);
                     
                     while($row = $result->fetch_assoc()) {
                         $statusClass = strtolower($row['estadoEquipos']) == 'operativo' ? 'online' : 'offline';
@@ -255,7 +255,7 @@
                  WHERE DATE(m.fecha_programada) = ?
                  ORDER BY m.fecha_programada ASC";
         
-        $stmt = $conexion->prepare($query);
+        $stmt = $connection->prepare($query);
         $stmt->bind_param("s", $hoy);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -288,7 +288,7 @@
                           WHERE r.tipo_reporte IN ('Error', 'Falla')
                           ORDER BY r.fecha_creacion DESC
                           LIMIT 3";
-                $result = $conexion->query($query);
+                $result = $connection->query($query);
                 
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
@@ -332,7 +332,7 @@
                                  WHERE m.fecha_programada >= CURDATE()
                                  ORDER BY m.fecha_programada ASC
                                  LIMIT 5";
-                        $result = $conexion->query($query);
+                        $result = $connection->query($query);
                         
                         while($row = $result->fetch_assoc()) {
                             $fecha = date('d/m/Y', strtotime($row['fecha_programada']));

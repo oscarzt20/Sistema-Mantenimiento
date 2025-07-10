@@ -15,7 +15,7 @@ $query = "SELECT u.nombreUsuario, u.apellidoP, u.correo, u.activoEstado, r.Nombr
           JOIN rol r ON u.id_rol = r.id_rol
           WHERE u.id_usuario = ?";
 
-$stmt = $conexion->prepare($query);
+$stmt = $connection->prepare($query);
 $stmt->bind_param("i", $id_usuario);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -33,5 +33,5 @@ if ($result->num_rows > 0) {
     echo json_encode(['status' => 'error', 'message' => 'Usuario no encontrado']);
 }
 
-$conexion->close();
+$connection->close();
 ?>

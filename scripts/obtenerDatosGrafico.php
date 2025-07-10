@@ -10,7 +10,7 @@ $query = "SELECT
           GROUP BY mes
           ORDER BY fecha_programada ASC";
 
-$result = $conexion->query($query);
+$result = $connection->query($query);
 
 $meses = [];
 $cantidades = [];
@@ -42,5 +42,5 @@ echo json_encode([
     'cantidades' => array_values($last_six_months)
 ]);
 
-$conexion->close();
+$connection->close();
 ?>

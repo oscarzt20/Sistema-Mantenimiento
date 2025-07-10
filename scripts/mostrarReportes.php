@@ -2,13 +2,13 @@
 header('Content-Type: application/json');
 
 // Database connection parameters
-$servername = "localhost";
-$username = "root"; // Replace with your database username
+$host = "localhost";
+$user = "root"; // Replace with your database username
 $password = "";     // Replace with your database password
-$dbname = "mantenimiento";
+$database = "mantenimiento";
 
 // Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($host, $user, $password, $database);
 
 // Check connection
 if ($conn->connect_error) {
