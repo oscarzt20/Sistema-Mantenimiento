@@ -1,4 +1,3 @@
-// notificaciones.js
 let contador = 0;
 const maxVisibleLeidas = 3;
 
@@ -7,13 +6,11 @@ function toggleDropdown() {
   dropdown.classList.toggle("show");
 }
 
-function actualizarContador(nuevoValor) {
-  contador = nuevoValor;
+function actualizarContador(delta) {
+  contador += delta;
   const badge = document.getElementById("notification-badge");
-  badge.textContent = contador;
-  badge.style.display = contador > 0 ? "inline-block" : "none";
+  badge.textContent = contador > 0 ? contador : 0;
 }
-
 
 function mostrarMensajeVacio(container) {
   const mensaje = document.createElement("div");
@@ -24,28 +21,20 @@ function mostrarMensajeVacio(container) {
 }
 
 function marcarEnterado(btn, id) {
-  const vistas = JSON.parse(localStorage.getItem("notificacionesVistas") || "[]");
+  btn.textContent = "✅ Enterado";
+  btn.disabled = true;
+  const contenedor = btn.closest(".notification-item");
+  contenedor.classList.add("leida");
 
-  if (!vistas.includes(id)) {
-    vistas.push(id);
+  // Guardar el ID en localStorage
+  const vistas = JSON.parse(localStorage.getItem("notificacionesVistas")) || [];
+  if (!vistas.includes(id.toString())) {
+    vistas.push(id.toString());
     localStorage.setItem("notificacionesVistas", JSON.stringify(vistas));
   }
 
-  const contenedor = btn.closest(".notification-item");
-  contenedor.remove();
-
   actualizarContador(-1);
-
-  const dropdown = document.getElementById("dropdown");
-  if (dropdown.querySelectorAll(".notification-item").length === 0) {
-    mostrarMensajeVacio(dropdown);
-  }
-}
-
-
-function enviarCorreo(btn) {
-  btn.textContent = "📧 Enviado";
-  btn.disabled = true;
+  limpiarLeidas();
 }
 
 function limpiarLeidas() {
@@ -56,7 +45,7 @@ function limpiarLeidas() {
 
   sobrantes.forEach(div => div.remove());
 
-  const restantes = dropdown.querySelectorAll(".notification-item");
+  const restantes = dropdown.querySelectorAll(".notification-item:not(.leida)");
   if (restantes.length === 0) {
     mostrarMensajeVacio(dropdown);
   }
@@ -72,17 +61,13 @@ async function cargarNotificacionesReales() {
     const data = await response.json();
 
     if (data.status === "success") {
-      const todas = data.notificaciones;
+      const vistas = JSON.parse(localStorage.getItem("notificacionesVistas")) || [];
 
-      // Obtener las vistas desde localStorage
-      const vistas = JSON.parse(localStorage.getItem("notificacionesVistas") || "[]");
-
-      // Filtrar solo las no vistas
-      const nuevas = todas.filter(n => !vistas.includes(n.id));
+      const nuevas = data.notificaciones.filter(n => !vistas.includes(n.id.toString()));
 
       if (nuevas.length === 0) {
-        actualizarContador(0);
         mostrarMensajeVacio(dropdown);
+        actualizarContador(0);
         return;
       }
 
@@ -93,8 +78,10 @@ async function cargarNotificacionesReales() {
         item.classList.add("notification-item");
 
         item.innerHTML = `
-          <p style="color: black;"><strong>${notif.usuario}</strong>, el equipo <strong>${notif.equipo}</strong> (Serie: ${notif.serie})
-          requiere <strong>${notif.tarea}</strong> en <strong>${notif.ubicacion}</strong> (Programado para el ${notif.fecha}).</p>
+          <p style="color: black;">
+            <strong>${notif.usuario}</strong>, el equipo <strong>${notif.equipo}</strong> (Serie: ${notif.serie})
+            requiere <strong>${notif.tarea}</strong> en <strong>${notif.ubicacion}</strong> (Programado para el ${notif.fecha}).
+          </p>
           <div class="notification-actions">
             <button class="btn-enterado" onclick="marcarEnterado(this, ${notif.id})">Enterad@</button>
           </div>
@@ -103,18 +90,16 @@ async function cargarNotificacionesReales() {
         dropdown.prepend(item);
       });
     } else {
-      actualizarContador(0);
       mostrarMensajeVacio(dropdown);
+      actualizarContador(0);
     }
   } catch (error) {
     console.error("Error al obtener notificaciones:", error);
-    actualizarContador(0);
     mostrarMensajeVacio(dropdown);
+    actualizarContador(0);
   }
 }
 
-
-// Aquí es donde se llama DOMContentLoaded. Se ejecuta cuando el documento está completamente cargado.
 document.addEventListener("DOMContentLoaded", function () {
   cargarNotificacionesReales();
 
