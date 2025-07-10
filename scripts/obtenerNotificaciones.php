@@ -32,6 +32,7 @@ $notificaciones = [];
 if ($resultado && $resultado->num_rows > 0) {
     while ($row = $resultado->fetch_assoc()) {
         $notificaciones[] = [
+            "id" => $row['id_mantenimiento'], // <- nuevo
             "usuario" => "{$row['nombreUsuario']} {$row['apellidoP']} {$row['apellidoM']}",
             "equipo" => $row['nombreEquipo'],
             "serie" => $row['numeroSerie'],
