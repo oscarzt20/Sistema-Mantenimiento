@@ -24,15 +24,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const data = await response.json();
 
       if (data.status === 'success') {
-        selectResponsable.innerHTML = '<option value="">Seleccione un responsable</option>';
+        // selectResponsable.innerHTML = '<option value="">Seleccione un responsable</option>';
         selectUbicacion.innerHTML = '<option value="">Seleccione una zona</option>';
 
-        data.responsables.forEach(r => {
-          const option = document.createElement('option');
-          option.value = r.id_usuario;
-          option.textContent = r.nombreUsuario;
-          selectResponsable.appendChild(option);
-        });
+        // data.responsables.forEach(r => {
+        //   const option = document.createElement('option');
+        //   option.value = r.id_usuario;
+        //   option.textContent = r.nombreUsuario;
+        //   selectResponsable.appendChild(option);
+        // });
 
         data.ubicaciones.forEach(u => {
           const option = document.createElement('option');
@@ -99,14 +99,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const crearBtn = form.querySelector("button[type='submit']");
         if (crearBtn) crearBtn.style.display = "none";
 
-        // Mostrar botón "Registrar otro equipo"
-        const btnNuevo = document.getElementById("btnNuevoRegistro");
-        if (btnNuevo) {
-          btnNuevo.style.display = "inline-block";
-          btnNuevo.addEventListener("click", () => {
-            window.location.reload(); // Recarga el formulario limpio
-          });
-        }
+        // // Mostrar botón "Registrar otro equipo"
+        // const btnNuevo = document.getElementById("btnNuevoRegistro");
+        // if (btnNuevo) {
+        //   btnNuevo.style.display = "inline-block";
+        //   btnNuevo.addEventListener("click", () => {
+        //     window.location.reload(); // Recarga el formulario limpio
+        //   });
+        // }
 
         setTimeout(() => mensaje.style.display = "none", 4000);
       } else {

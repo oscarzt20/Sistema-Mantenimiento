@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
-$required = ["tipoEquipo", "nombreEquipo", "numeroSerie", "descripcion", "fechaIngreso", "id_ubicacion", "id_usuario"];
+$required = ["tipoEquipo", "nombreEquipo", "numeroSerie", "descripcion", "fechaIngreso", "id_ubicacion"];
 foreach ($required as $campo) {
     if (empty($_POST[$campo])) {
         echo json_encode(["status" => "error", "message" => "Falta el campo: $campo"]);
@@ -15,13 +15,21 @@ foreach ($required as $campo) {
     }
 }
 
+// $required = ["tipoEquipo", "nombreEquipo", "numeroSerie", "descripcion", "fechaIngreso", "id_ubicacion", "id_usuario"];
+// foreach ($required as $campo) {
+//     if (empty($_POST[$campo])) {
+//         echo json_encode(["status" => "error", "message" => "Falta el campo: $campo"]);
+//         exit;
+//     }
+// }
+
 $tipo = $_POST["tipoEquipo"];
 $nombre = $_POST["nombreEquipo"];
 $serie = $_POST["numeroSerie"];
 $desc = $_POST["descripcion"];
 $fecha = $_POST["fechaIngreso"];
 $id_ubicacion = intval($_POST["id_ubicacion"]);
-$id_usuario = intval($_POST["id_usuario"]);
+// $id_usuario = intval($_POST["id_usuario"]);
 
 // Obtener dinámicamente el id_estado para el estado "Registrado"
 $getEstado = $connection->prepare("SELECT id_estado FROM estado WHERE estadoEquipos = 'Registrado' LIMIT 1");
