@@ -177,65 +177,6 @@ $conn->close();
     <link rel="stylesheet" href="/Styles/mostrarReportes.css">
     <link rel="stylesheet" href="/Styles/estiloGeneral.css">
     <style>
-        .navbar-notifications {
-            position: relative;
-        }
-
-        .notification-btn {
-            background-color: #87ceeb;
-            /* Sky blue */
-            color: #1a1a2e;
-            /* Dark blue/purple */
-            padding: 0.75rem 1.25rem;
-            border: none;
-            border-radius: 0.5rem;
-            /* Rounded corners */
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .notification-btn:hover {
-            background-color: #6cbada;
-            /* Darker sky blue on hover */
-        }
-
-        .badge {
-            background-color: #ff4c4c;
-            /* Red for notifications */
-            color: white;
-            border-radius: 50%;
-            padding: 0.2rem 0.5rem;
-            font-size: 0.75rem;
-            position: absolute;
-            top: -5px;
-            right: -5px;
-        }
-
-        .notification-dropdown {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 250px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            right: 0;
-            border-radius: 0.5rem;
-            /* Rounded corners */
-            padding: 1rem;
-            color: #333;
-        }
-
-        .notification-dropdown.hidden {
-            display: none;
-        }
-
-        .no-notifications {
-            text-align: center;
-            color: #666;
-            padding: 1rem;
-        }
 
         /* Custom Modal Styles */
         .custom-modal-backdrop {
@@ -433,33 +374,6 @@ $conn->close();
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                padding: 1rem;
-            }
-
-            .navbar-menu {
-                flex-direction: column;
-                width: 100%;
-                margin-top: 1rem;
-            }
-
-            .navbar-menu li {
-                margin: 0.5rem 0;
-                text-align: center;
-            }
-
-            .dropdown-content {
-                position: static;
-                /* Make dropdown content flow normally on small screens */
-                width: 100%;
-                box-shadow: none;
-                border-radius: 0;
-            }
-
-            .navbar-notifications {
-                margin-top: 1rem;
-            }
 
             section {
                 padding: 1.5rem;
@@ -484,6 +398,10 @@ $conn->close();
 
 <body class="bg-gray-100 font-sans antialiased text-[#333]">
     <header>
+        <!-- Barra de navegación horizontal -->
+        <script src="../scripts/notificaciones.js" defer></script>
+        <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
+	
         <nav class="navbar">
             <div class="navbar-brand">Dashboard de Mantenimiento</div>
             <ul class="navbar-menu">
@@ -491,22 +409,31 @@ $conn->close();
                 <li class="dropdown">
                     <a href="#" style="color: inherit; text-decoration: none;">EQUIPOS</a>
                     <div class="dropdown-content">
-                        <a class="active" href="registroEquipos.html">Registrar Equipo</a>
-                        <a href="/pages/editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
+                        <a href="registroEquipos.html">Registrar Equipo</a>
+                        <a href="editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
                     </div>
                 </li>
-                <li><a href="historialMantenimientos.php" style="color: inherit; text-decoration: none;">MANTENIMIENTOS</a></li>
+                <li class="dropdown">
+                    <a>MANTENIMIENTOS</a>
+                    <div class="dropdown-content">
+                        <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
+                            mantenimiento</a>
+                        <a href="programar mantenimiento.html">Programar mantenimiento</a>
+
+                        <a href="historialMantenimientos.php">Historial de mantenimientos</a>
+                    </div>
+                </li>
                 <li class="dropdown">
                     <a href="#" style="color: inherit; text-decoration: none;">REPORTES</a>
                     <div class="dropdown-content">
-                        <a href="/pages/generarReportes.php">Generar Reportes</a>
-                        <a href="/pages/mostrarReportes.php">Mostrar Reportes</a>
+                        <a href="generarReportes.php">Generar Reportes</a>
+                        <a href="mostrarReportes.php">Mostrar Reportes</a>
                     </div>
                 </li>
                 <li class="dropdown">
                     <a>USUARIOS</a>
                     <div class="dropdown-content">
-                        <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>
+                        <!-- <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>  -->
                         <a href="informacionUsuario.php">Gestionar Usuarios</a>
                         <button class="btt-info" id="cerrarSesion">Cerrar sesión</button>
                     </div>
@@ -514,10 +441,10 @@ $conn->close();
             </ul>
             <div class="navbar-notifications">
                 <button class="notification-btn" onclick="toggleDropdown()">
-                    Notificaciones <span id="notification-badge" class="badge">0</span>
+                Notificaciones <span id="notification-badge" class="badge">0</span>
                 </button>
                 <div class="notification-dropdown" id="dropdown">
-                    <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
+                <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
                 </div>
             </div>
         </nav>
