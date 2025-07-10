@@ -167,7 +167,7 @@
                 <a href="#" style="color: inherit; text-decoration: none;">EQUIPOS</a>
                 <div class="dropdown-content">
                     <a href="registroEquipos.html">Registrar Equipo</a>
-                    <a href="editarEliminarEquipos.html">Editar/Eliminar Equipo</a>
+                    <a href="/pages/editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
                 </div>
             </li>
             <li><a href="historialMantenimientos.php" style="color: inherit; text-decoration: none;">MANTENIMIENTOS</a></li>

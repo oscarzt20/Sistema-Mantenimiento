@@ -56,19 +56,40 @@ document.addEventListener('click', (event) => {
     }
 });
 
-// --- Report Display Logic ---
+// --- Report Selection and Display Logic ---
 document.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const reportId = urlParams.get('id'); // Get report ID from URL parameter
+    const reportSelect = document.getElementById('report-select');
+    const viewReportButton = document.getElementById('view-report-button');
+    const reportDisplaySection = document.getElementById('report-display-section');
+    const printButton = document.getElementById('print-button');
+    const analyzeReportButton = document.getElementById('analyze-report-button');
 
-    if (reportId) {
-        fetchReportData(reportId);
+    // Populate the dropdown with available reports from PHP-generated global variable
+    populateReportsDropdown(allReportsData);
+
+    // If a specific report was loaded initially by PHP, select it in the dropdown
+    if (specificReportDataInitial && specificReportDataInitial.id_reporte) {
+        reportSelect.value = specificReportDataInitial.id_reporte;
+        // The display section is already populated by PHP, so just ensure it's visible
+        reportDisplaySection.classList.remove('hidden');
     } else {
-        showCustomModal('No se proporcionó un ID de reporte en la URL.', 'alert');
+        // Initially hide the report display section if no ID was provided in URL
+        reportDisplaySection.classList.add('hidden');
+    }
+
+    // Event listener for "Ver Reporte" button
+    if (viewReportButton) {
+        viewReportButton.addEventListener('click', () => {
+            const selectedReportId = reportSelect.value;
+            if (selectedReportId) {
+                fetchFullReportDetails(selectedReportId); // Now explicitly fetch details via AJAX
+            } else {
+                showCustomModal('Por favor, selecciona un reporte para mostrar.', 'alert');
+            }
+        });
     }
 
     // Event listener for Print button
-    const printButton = document.getElementById('print-button');
     if (printButton) {
         printButton.addEventListener('click', () => {
             window.print();
@@ -76,18 +97,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Event listener for Analyze Report button
-    const analyzeReportButton = document.getElementById('analyze-report-button');
     if (analyzeReportButton) {
         analyzeReportButton.addEventListener('click', analyzeReport);
     }
 });
 
-async function fetchReportData(id) {
+// Function to populate the dropdown
+function populateReportsDropdown(reports) {
+    const reportSelect = document.getElementById('report-select');
+    // Keep the first default option, or clear and add a new one
+    // If you want to clear and add a new default:
+    // reportSelect.innerHTML = '<option value="">-- Selecciona un reporte --</option>';
+
+    if (reports && reports.length > 0) {
+        reports.forEach(report => {
+            const option = document.createElement('option');
+            option.value = report.id;
+            option.textContent = report.name;
+            reportSelect.appendChild(option);
+        });
+    } else {
+        // If no reports were found by PHP, ensure the message is set
+        if (reportSelect.options.length <= 1) { // Check if only the default option exists
+            reportSelect.innerHTML = '<option value="">No hay reportes disponibles</option>';
+        }
+    }
+}
+
+// Function to fetch full report details when selected from dropdown
+async function fetchFullReportDetails(id) {
     showLoading(true);
+    const reportDisplaySection = document.getElementById('report-display-section');
+    reportDisplaySection.classList.add('hidden'); // Hide report section while loading
+
     try {
-        // Make sure the PHP file is in the same directory or adjust the path
-        const response = await fetch(`mostrarReportes.php?id=${id}`);
-        const data = await response.json();
+        // Crucial change: Add 'ajax=1' to the URL to tell PHP to only return JSON
+        const response = await fetch(`mostrarReportes.php?id=${id}&ajax=1`);
+
+        // Check if the response is OK (status 200)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json(); // PHP will now return JSON if 'ajax=1' is present
 
         if (data.error) {
             showCustomModal(`Error al cargar el reporte: ${data.error}`, 'alert');
@@ -103,15 +155,16 @@ async function fetchReportData(id) {
         document.getElementById('report-observations').textContent = data.mantenimiento_comentario;
         document.getElementById('report-serial').textContent = data.numeroSerie;
         document.getElementById('report-entry-date').textContent = data.fechaIngreso;
-        // For 'report-exit-date', we'll use 'fecha_programada' from 'mantenimiento' as a proxy for the maintenance date
         document.getElementById('report-exit-date').textContent = data.fecha_programada;
 
         // Dummy total, as it's not in the database schema
         document.getElementById('report-total').textContent = (Math.random() * 1000).toFixed(2); // Example random total
 
+        reportDisplaySection.classList.remove('hidden'); // Show report section after data is loaded
+
     } catch (error) {
-        console.error('Error fetching report data:', error);
-        showCustomModal('Hubo un error al obtener los datos del reporte. Por favor, inténtalo de nuevo.', 'alert');
+        console.error('Error fetching full report details:', error);
+        showCustomModal('Hubo un error al obtener los datos completos del reporte. Por favor, inténtalo de nuevo. Detalle: ' + error.message, 'alert');
     } finally {
         showLoading(false);
     }
@@ -132,6 +185,12 @@ async function analyzeReport() {
     const entryDate = document.getElementById('report-entry-date').textContent;
     const exitDate = document.getElementById('report-exit-date').textContent;
     const total = document.getElementById('report-total').textContent;
+
+    // Check if report data is available before analyzing
+    if (!reportFolio || reportFolio === '') { // Check for empty string as well
+        showCustomModal('No hay un reporte cargado para analizar. Por favor, selecciona y visualiza un reporte primero.', 'alert');
+        return;
+    }
 
     const reportContent = `
         Reporte de Mantenimiento (Folio: ${reportFolio})
