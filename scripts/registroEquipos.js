@@ -99,6 +99,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const crearBtn = form.querySelector("button[type='submit']");
         if (crearBtn) crearBtn.style.display = "none";
 
+        // Mostrar botón "Registrar otro equipo"
+        const btnNuevo = document.getElementById("btnNuevoRegistro");
+        if (btnNuevo) {
+          btnNuevo.style.display = "inline-block";
+          btnNuevo.addEventListener("click", () => {
+            window.location.reload(); // Recarga el formulario limpio
+          });
+        }
+
         setTimeout(() => mensaje.style.display = "none", 4000);
       } else {
         alert("Error: " + result.message);

@@ -85,9 +85,15 @@
                             Tipo de equipo*
                             <select name="tipoEquipo" required>
                                 <option value="">Seleccione un tipo de equipo</option>
-                                <option value="PC / Laptop">PC / Laptop</option>
-                                <option value="Periférico">Periférico</option>
-                                <option value="Impresora">Impresora</option>
+                                <option value="Computo">Computo</option>
+                                <option value="Impresión y escaneo">Impresión y escaneo</option>
+                                <option value="Redes">Redes</option>
+                                <option value="Periféricos">Periféricos</option>
+                                <option value="Audiovisual">Audiovisual</option>
+                                <option value="Seguridad">Seguridad</option>
+                                <option value="Telefonía">Telefonía</option>
+                                <option value="Energía">Energía</option>
+                                <option value="Móvil">Móvil</option>
                             </select>
                         </label>
                         <label>
@@ -130,7 +136,7 @@
             </div>
 
             <div class="buttons">
-                <button type="button" onclick="window.location.href='dashboard.php'" class="back-btn">Inicio</button>
+                <button type="button" id="btnNuevoRegistro" class="back-btn" style="display: none;">Registrar otro equipo</button>
                 <button type="submit">Crear</button>
             </div>
         </form>
