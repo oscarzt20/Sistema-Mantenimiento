@@ -3,7 +3,7 @@
 $servername = "127.0.0.1"; // Tu nombre de servidor
 $username = "root"; // Tu nombre de usuario de la base de datos
 $password = ""; // Tu contraseña de la base de datos
-$dbname = "mantenimiento"; // Tu nombre de la base de datos
+$dbname = "mantenimientobd"; // Tu nombre de la base de datos
 
 // Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
