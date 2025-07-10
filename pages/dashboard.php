@@ -158,47 +158,53 @@
 </head>
 
 <body>
-    <!-- Barra de navegación horizontal -->
+	<!-- Barra de navegación horizontal -->
+    <script src="../scripts/notificaciones.js" defer></script>
+    <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
+
     <nav class="navbar">
         <div class="navbar-brand">Dashboard de Mantenimiento</div>
         <ul class="navbar-menu">
-            <li class="active"><a href="dashboard.php" style="color: inherit; text-decoration: none;">INICIO</a></li>
+            <li><a href="dashboard.php" style="color: inherit; text-decoration: none;">INICIO</a></li>
             <li class="dropdown">
                 <a href="#" style="color: inherit; text-decoration: none;">EQUIPOS</a>
                 <div class="dropdown-content">
                     <a href="registroEquipos.html">Registrar Equipo</a>
-                    <a href="/pages/editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
+                    <a href="editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
                 </div>
             </li>
-            <li><a href="historialMantenimientos.php" style="color: inherit; text-decoration: none;">MANTENIMIENTOS</a></li>
+            <li class="dropdown">
+                <a>MANTENIMIENTOS</a>
+                <div class="dropdown-content">
+                    <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
+                        mantenimiento</a>
+                    <a href="programar mantenimiento.html">Programar mantenimiento</a>
+
+                    <a href="historialMantenimientos.php">Historial de mantenimientos</a>
+                </div>
+            </li>
             <li class="dropdown">
                 <a href="#" style="color: inherit; text-decoration: none;">REPORTES</a>
                 <div class="dropdown-content">
-                    <a href="generarReportes.html">Generar Reportes</a>
-                    <a href="mostrarReportes.html">Mostrar Reportes</a>
+                    <a href="generarReportes.php">Generar Reportes</a>
+                    <a href="mostrarReportes.php">Mostrar Reportes</a>
                 </div>
             </li>
             <li class="dropdown">
                 <a>USUARIOS</a>
                 <div class="dropdown-content">
-                    <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>
+                    <!-- <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>  -->
                     <a href="informacionUsuario.php">Gestionar Usuarios</a>
                     <button class="btt-info" id="cerrarSesion">Cerrar sesión</button>
                 </div>
             </li>
         </ul>
         <div class="navbar-notifications">
-            <button class="notification-btn">Notificaciones <span class="badge">3</span></button>
-            <div class="notification-dropdown">
-                <?php
-                include '../scripts/conexion.php';
-                $query = "SELECT contenido FROM reporte ORDER BY fecha_creacion DESC LIMIT 3";
-                $result = $connection->query($query);
-                
-                while($row = $result->fetch_assoc()) {
-                    echo '<div class="notification-item">'.$row['contenido'].'</div>';
-                }
-                ?>
+            <button class="notification-btn" onclick="toggleDropdown()">
+            Notificaciones <span id="notification-badge" class="badge">0</span>
+            </button>
+            <div class="notification-dropdown" id="dropdown">
+            <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
             </div>
         </div>
     </nav>
@@ -413,10 +419,10 @@
                 });
             });
 
-            // Mostrar/ocultar notificaciones
-            document.querySelector('.notification-btn').addEventListener('click', function() {
-                document.querySelector('.notification-dropdown').classList.toggle('show');
-            });
+            // // Mostrar/ocultar notificaciones
+            // document.querySelector('.notification-btn').addEventListener('click', function() {
+            //     document.querySelector('.notification-dropdown').classList.toggle('show');
+            // });
 
             // Manejo del modal de usuario
             const btnCerrarInfo = document.getElementById('btt-cerrarInfo');
