@@ -1,3 +1,4 @@
+// notificaciones.js
 let contador = 0;
 const maxVisibleLeidas = 3;
 
@@ -12,25 +13,12 @@ function actualizarContador(delta) {
   badge.textContent = contador;
 }
 
-function simularNotificacion() {
-  const dropdown = document.getElementById("dropdown");
-  const noNotif = document.getElementById("noNotifications");
-  if (noNotif) noNotif.remove();
-
-  actualizarContador(1);
-
-  const item = document.createElement("div");
-  item.classList.add("notification-item");
-
-  item.innerHTML = `
-    <p><strong>Ana López</strong>, el equipo <strong>iMac 27"</strong> (Serial: A1B2C3) requiere <strong>limpieza interna</strong> en la <strong>Sala de reuniones 2</strong>.</p>
-    <div class="notification-actions">
-      <button class="btn-correo" onclick="enviarCorreo(this)">Enviar por correo</button>
-      <button class="btn-enterado" onclick="marcarEnterado(this)">Enterad@</button>
-    </div>
-  `;
-
-  dropdown.prepend(item);
+function mostrarMensajeVacio(container) {
+  const mensaje = document.createElement("div");
+  mensaje.id = "noNotifications";
+  mensaje.className = "no-notifications";
+  mensaje.textContent = "No hay notificaciones.";
+  container.appendChild(mensaje);
 }
 
 function marcarEnterado(btn) {
@@ -55,21 +43,63 @@ function limpiarLeidas() {
 
   sobrantes.forEach(div => div.remove());
 
-  // Si no hay notificaciones visibles
   const restantes = dropdown.querySelectorAll(".notification-item");
   if (restantes.length === 0) {
-    const mensaje = document.createElement("div");
-    mensaje.id = "noNotifications";
-    mensaje.className = "no-notifications";
-    mensaje.textContent = "No hay notificaciones.";
-    dropdown.appendChild(mensaje);
+    mostrarMensajeVacio(dropdown);
   }
 }
 
-document.addEventListener("click", function (e) {
+async function cargarNotificacionesReales() {
   const dropdown = document.getElementById("dropdown");
-  const btn = document.querySelector(".notification-btn");
-  if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.classList.remove("show");
+  const noNotif = document.getElementById("noNotifications");
+  if (noNotif) noNotif.remove();
+
+  try {
+    const response = await fetch("../scripts/obtenerNotificaciones.php");
+    const data = await response.json();
+
+    if (data.status === "success") {
+      const notificaciones = data.notificaciones;
+      if (notificaciones.length === 0) {
+        mostrarMensajeVacio(dropdown);
+        return;
+      }
+
+      actualizarContador(notificaciones.length);
+
+      notificaciones.forEach((notif) => {
+        const item = document.createElement("div");
+        item.classList.add("notification-item");
+
+        item.innerHTML = `
+          <p style="color: black;"><strong>${notif.usuario}</strong>, el equipo <strong>${notif.equipo}</strong> (Serie: ${notif.serie})
+          requiere <strong>${notif.tarea}</strong> en <strong>${notif.ubicacion}</strong> (Programado para el ${notif.fecha}).</p>
+          <div class="notification-actions">
+            <button class="btn-correo" onclick="enviarCorreo(this)">Enviar por correo</button>
+            <button class="btn-enterado" onclick="marcarEnterado(this)">Enterad@</button>
+          </div>
+        `;
+
+        dropdown.prepend(item);
+      });
+    } else {
+      mostrarMensajeVacio(dropdown);
+    }
+  } catch (error) {
+    console.error("Error al obtener notificaciones:", error);
+    mostrarMensajeVacio(dropdown);
   }
+}
+
+// Aquí es donde se llama DOMContentLoaded. Se ejecuta cuando el documento está completamente cargado.
+document.addEventListener("DOMContentLoaded", function () {
+  cargarNotificacionesReales();
+
+  document.addEventListener("click", function (e) {
+    const dropdown = document.getElementById("dropdown");
+    const btn = document.querySelector(".notification-btn");
+    if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove("show");
+    }
+  });
 });
