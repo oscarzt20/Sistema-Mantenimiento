@@ -22,7 +22,16 @@ $desc = $_POST["descripcion"];
 $fecha = $_POST["fechaIngreso"];
 $id_ubicacion = intval($_POST["id_ubicacion"]);
 $id_usuario = intval($_POST["id_usuario"]);
-$id_estado = 1;
+
+// Obtener dinámicamente el id_estado para el estado "Registrado"
+$getEstado = $connection->prepare("SELECT id_estado FROM estado WHERE estadoEquipos = 'Registrado' LIMIT 1");
+$getEstado->execute();
+$getEstado->bind_result($id_estado);
+if (!$getEstado->fetch()) {
+    echo json_encode(["status" => "error", "message" => "No se encontró el estado 'Registrado'."]);
+    exit;
+}
+$getEstado->close();
 
 // Validación de número de serie duplicado
 $check = $connection->prepare("SELECT 1 FROM equipo WHERE numeroSerie = ?");
