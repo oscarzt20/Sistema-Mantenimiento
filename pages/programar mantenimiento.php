@@ -371,7 +371,7 @@ $connection->close();
                         <option value="">Seleccione un equipo</option>
                         <?php foreach ($equipos as $equipo) : ?>
                             <option value="<?php echo htmlspecialchars($equipo['id_equipo']); ?>">
-                                <?php echo htmlspecialchars($equipo['id_equipo'] . ' - ' . $equipo['nombre_equipo']); ?>
+                                <?php echo htmlspecialchars($equipo['id_equipo'] . ' - ' . $equipo['nombreEquipo']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
