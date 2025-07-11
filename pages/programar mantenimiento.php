@@ -8,6 +8,8 @@ $database = "mantenimientobd";
 
 // Initialize an empty message variable
 $mensaje = "";
+$equipos = []; // Array to store equipment data
+$usuarios = []; // Array to store user data
 
 // Establish database connection
 $connection = new mysqli($host, $user, $password, $database);
@@ -16,6 +18,31 @@ $connection = new mysqli($host, $user, $password, $database);
 if ($connection->connect_error) {
     die("Error en la conexión: " . $connection->connect_error);
 }
+
+// Fetch equipment IDs and names from the 'equipo' table
+$sql_equipos = "SELECT id_equipo, nombreEquipo FROM equipo ORDER BY nombreEquipo ASC";
+$result_equipos = $connection->query($sql_equipos);
+if ($result_equipos) {
+    while ($row = $result_equipos->fetch_assoc()) {
+        $equipos[] = $row;
+    }
+    $result_equipos->free();
+} else {
+    $mensaje .= "<div class='alert alert-danger'>Error al cargar equipos: " . $connection->error . "</div>";
+}
+
+// Fetch user IDs and names from the 'usuario' table
+$sql_usuarios = "SELECT id_usuario, nombreUsuario FROM usuario ORDER BY nombreUsuario ASC";
+$result_usuarios = $connection->query($sql_usuarios);
+if ($result_usuarios) {
+    while ($row = $result_usuarios->fetch_assoc()) {
+        $usuarios[] = $row;
+    }
+    $result_usuarios->free();
+} else {
+    $mensaje .= "<div class='alert alert-danger'>Error al cargar usuarios: " . $connection->error . "</div>";
+}
+
 
 // Check if the form has been submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -64,127 +91,142 @@ $connection->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programar Mantenimientos</title>
-
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons (if needed, e.g., for notification bell) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/Styles/estiloGeneral.css">
     <style>
-        /* Estilos generales */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f7fa;
-            color: #333;
-        }
-
-        /* Contenedor principal */
+        /* Main content and cards */
         .container {
-            padding: 20px;
+            padding: 1.25rem;
+            /* p-5 */
+            flex-grow: 1;
+            /* Allow container to grow and take available space */
+            margin: auto;
+            /* Center horizontally and vertically within flex container */
+            width: 100%;
+            /* Ensure it takes full width within its flex context */
         }
 
         .row {
             display: flex;
             flex-wrap: wrap;
-            margin-bottom: 20px;
-            gap: 20px;
             justify-content: center;
-            /* Center the cards */
+            gap: 1.25rem;
+            /* gap-5 */
+            margin-bottom: 1.25rem;
+            /* mb-5 */
         }
 
-        /* Tarjetas */
         .card1 {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            width: 70%;
-            max-width: 600px;
-            /* Max width for better readability */
-        }
-
-        .card2 {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            width: 20%;
-            min-width: 200px;
-            /* Minimum width for smaller screens */
+            border-radius: 0.5rem;
+            /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* shadow-lg */
+            padding: 1.5rem;
+            /* p-6 */
+            width: 100%;
+            max-width: 36rem;
+            /* max-w-xl */
         }
 
         h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #2c3e50;
-            font-size: 1.1rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            font-size: 1.25rem;
+            /* text-xl */
+            font-weight: 600;
+            /* font-semibold */
+            color: #374151;
+            /* text-gray-700 */
+            border-bottom: 1px solid #e5e7eb;
+            /* border-b border-gray-200 */
+            padding-bottom: 0.75rem;
+            /* pb-3 */
+            margin-bottom: 1.25rem;
+            /* mb-5 */
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        /* Formulario de mantenimiento */
         label {
             display: block;
-            margin-top: 15px;
-            font-weight: bold;
+            margin-top: 1rem;
+            /* mt-4 */
+            font-weight: 600;
+            /* font-semibold */
+            color: #374151;
+            /* text-gray-700 */
         }
 
         input,
         select,
         textarea {
-            width: calc(100% - 22px);
-            /* Adjust width to account for padding and border */
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .error-message {
-            color: #cc0000;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-
-        .valid-icon {
-            color: #00aa00;
-            font-weight: bold;
-            display: none;
-            margin-left: 5px;
-        }
-
-        .photo-section {
             width: 100%;
-            text-align: center;
+            padding: 0.5rem;
+            /* p-2 */
+            margin-top: 0.25rem;
+            /* mt-1 */
+            border: 1px solid #d1d5db;
+            /* border border-gray-300 */
+            border-radius: 0.375rem;
+            /* rounded-md */
+            font-size: 0.875rem;
+            /* text-sm */
         }
 
-        .user-photo {
-            width: 50%;
-            height: 150px;
-            object-fit: cover;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 2px #3b82f6;
+            /* focus:ring-blue-500 */
+            border-color: #3b82f6;
+            /* focus:border-blue-500 */
         }
+
 
         .buttons {
-            margin-top: 20px;
+            margin-top: 1.5rem;
+            /* mt-6 */
             display: flex;
             justify-content: flex-end;
-            /* Align buttons to the right */
-            gap: 10px;
-            /* Space between buttons */
+            gap: 0.75rem;
+            /* gap-3 */
         }
 
         .create-button,
         .back-button {
-            padding: 10px 20px;
+            padding-left: 1.25rem;
+            /* px-5 */
+            padding-right: 1.25rem;
+            /* px-5 */
+            padding-top: 0.5rem;
+            /* py-2 */
+            padding-bottom: 0.5rem;
+            /* py-2 */
             color: white;
-            border: none;
-            border-radius: 5px;
+            border-radius: 0.375rem;
+            /* rounded-md */
             cursor: pointer;
-            font-size: 14px;
+            font-size: 0.875rem;
+            /* text-sm */
+            font-weight: 500;
+            /* font-medium */
+            transition-property: background-color;
+            transition-duration: 300ms;
+        }
+
+        .create-button {
+            background-color: #16a34a;
+            /* bg-green-600 */
+        }
+
+        .create-button:hover {
+            background-color: #15803d;
+            /* hover:bg-green-700 */
         }
 
         .create-button[disabled] {
@@ -192,211 +234,64 @@ $connection->close();
             cursor: not-allowed;
         }
 
-        .create-button {
-            background-color: #27ae60;
-        }
-
-        .back-button {
-            background-color: #e74c3c;
-        }
-
-        /* Navbar styles */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #2c3e50;
-            color: white;
-            padding: 0 20px;
-            height: 60px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .navbar-brand {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .navbar-menu {
-            display: flex;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .navbar-menu li {
-            padding: 0 15px;
-            cursor: pointer;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            transition: background-color 0.3s;
-            position: relative;
-        }
-
-        .navbar-menu li:hover {
-            background-color: #34495e;
-        }
-
-        .navbar-menu li.active {
-            background-color: #3498db;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-            height: 100%;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #2c3e50;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            top: 100%;
-            left: 0;
-            margin-top: 0;
-        }
-
-        .dropdown-content a {
-            color: white;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #34495e;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown button {
-            text-align: left;
-            padding: 10px 15px;
-            border: none;
-            background-color: transparent;
-            color: white;
-            font-size: 0.95rem;
-            cursor: pointer;
-        }
-
-        .dropdown button:hover {
-            background-color: #3d566e;
-        }
-
-        .navbar-notifications {
-            position: relative;
-        }
-
-        .notification-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .badge {
-            background-color: #e74c3c;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 0.8rem;
-            margin-left: 5px;
-        }
-
-        .badge.blue {
-            background-color: #3498db;
-        }
-
-        .badge.red {
-            background-color: #e74c3c;
-        }
-
-        .notification-dropdown {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 40px;
-            background-color: white;
-            min-width: 250px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            z-index: 100;
-            padding: 10px 0;
-        }
-
-        .notification-dropdown.show {
-            display: block;
-        }
-
-        .notification-item {
-            padding: 10px 15px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-        }
-
-        .notification-item:hover {
-            background-color: #f5f7fa;
-        }
-
-        /* Styles for alert messages */
+        /* Alert messages */
         .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            font-size: 16px;
+            padding: 1rem;
+            /* p-4 */
+            margin-bottom: 1rem;
+            /* mb-4 */
+            border-radius: 0.375rem;
+            /* rounded-md */
+            font-size: 1rem;
+            /* text-base */
         }
 
         .alert-success {
-            color: #3c763d;
-            background-color: #dff0d8;
-            border-color: #d6e9c6;
+            background-color: #d1fae5;
+            /* bg-green-100 */
+            color: #047857;
+            /* text-green-700 */
+            border: 1px solid #a7f3d0;
+            /* border border-green-200 */
         }
 
         .alert-danger {
-            color: #a94442;
-            background-color: #f2dede;
-            border-color: #ebccd1;
+            background-color: #fee2e2;
+            /* bg-red-100 */
+            color: #b91c1c;
+            /* text-red-700 */
+            border: 1px solid #fecaca;
+            /* border border-red-200 */
         }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .navbar-menu {
                 display: none;
-                /* Hide menu on small screens by default */
                 flex-direction: column;
                 position: absolute;
-                top: 60px;
+                top: 4rem;
+                /* top-16 */
                 left: 0;
                 width: 100%;
-                background-color: #2c3e50;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                background-color: #1a202c;
+                /* bg-gray-900 */
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             }
 
             .navbar-menu.active {
                 display: flex;
-                /* Show menu when active */
             }
 
             .navbar-menu li {
                 width: 100%;
                 text-align: center;
-                padding: 10px 0;
+                padding: 0.625rem 0;
+                /* py-2.5 */
             }
 
             .dropdown-content {
                 position: static;
-                /* Make dropdown content static on small screens */
                 width: 100%;
                 box-shadow: none;
             }
@@ -404,7 +299,6 @@ $connection->close();
             .card1,
             .card2 {
                 width: 95%;
-                /* Make cards take full width on small screens */
                 margin: 0 auto;
             }
 
@@ -416,76 +310,81 @@ $connection->close();
     </style>
 </head>
 
-<body>
+<body>  
 
-	<!-- Barra de navegación horizontal -->
-    <script src="../scripts/notificaciones.js" defer></script>
-	<link rel="stylesheet" href="../Styles/estiloGeneral.css" />
-	
     <nav class="navbar">
         <div class="navbar-brand">Dashboard de Mantenimiento</div>
         <ul class="navbar-menu">
-            <li><a href="dashboard.php" style="color: inherit; text-decoration: none;">INICIO</a></li>
+            <li><a href="dashboard.php" class="text-white no-underline">INICIO</a></li>
             <li class="dropdown">
-                <a href="#" style="color: inherit; text-decoration: none;">EQUIPOS</a>
+                <a href="#" class="text-white no-underline">EQUIPOS</a>
                 <div class="dropdown-content">
                     <a href="registroEquipos.html">Registrar Equipo</a>
                     <a href="editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
                 </div>
             </li>
             <li class="dropdown">
-                <a>MANTENIMIENTOS</a>
+                <a class="text-white no-underline">MANTENIMIENTOS</a>
                 <div class="dropdown-content">
-                    <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
-                        mantenimiento</a> -->
-                    <a href="programar mantenimiento.html">Programar mantenimiento</a>
-
+                    <a href="programar mantenimiento.php" class="active">Programar mantenimiento</a>
                     <a href="historialMantenimientos.php">Historial de mantenimientos</a>
                 </div>
             </li>
             <li class="dropdown">
-                <a href="#" style="color: inherit; text-decoration: none;">REPORTES</a>
+                <a href="#" class="text-white no-underline">REPORTES</a>
                 <div class="dropdown-content">
                     <a href="generarReportes.php">Generar Reportes</a>
                     <a href="mostrarReportes.php">Mostrar Reportes</a>
                 </div>
             </li>
             <li class="dropdown">
-                <a>USUARIOS</a>
+                <a class="text-white no-underline">USUARIOS</a>
                 <div class="dropdown-content">
-                    <!-- <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>  -->
                     <a href="informacionUsuario.php">Gestionar Usuarios</a>
                     <button class="btt-info" id="cerrarSesion">Cerrar sesión</button>
                 </div>
             </li>
         </ul>
         <div class="navbar-notifications">
-            <button class="notification-btn" onclick="toggleDropdown()">
-            Notificaciones <span id="notification-badge" class="badge">0</span>
+            <button class="notification-btn" id="notificationBtn">
+                Notificaciones <span id="notification-badge" class="badge">0</span>
             </button>
-            <div class="notification-dropdown" id="dropdown">
-            <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
+            <div class="notification-dropdown" id="notificationDropdown">
+                <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
             </div>
         </div>
     </nav>
 
-    <!-- Contenido principal -->
     <div class="container">
         <div class="row">
-            <!-- Tarjeta de programar mantenimientos -->
             <div class="card1">
                 <h3>Programar Mantenimientos</h3>
-                <!-- Message display area -->
-                <?php echo $mensaje; ?>
-                <form id="maintenance-form" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                <div id="message-display" class="mb-4">
+                    <?php echo $mensaje; ?>
+                </div>
+                <form id="maintenance-form" class="space-y-4" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                     <label for="date">Fecha</label>
                     <input type="date" id="date" name="fecha" required>
 
                     <label for="id_equipo">ID del equipo</label>
-                    <input type="number" id="id_equipo" name="id_equipo" required>
+                    <select id="id_equipo" name="id_equipo" required>
+                        <option value="">Seleccione un equipo</option>
+                        <?php foreach ($equipos as $equipo) : ?>
+                            <option value="<?php echo htmlspecialchars($equipo['id_equipo']); ?>">
+                                <?php echo htmlspecialchars($equipo['id_equipo'] . ' - ' . $equipo['nombre_equipo']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
 
                     <label for="id_usuario">ID del usuario</label>
-                    <input type="number" id="id_usuario" name="id_usuario" required>
+                    <select id="id_usuario" name="id_usuario" required>
+                        <option value="">Seleccione un usuario</option>
+                        <?php foreach ($usuarios as $usuario) : ?>
+                            <option value="<?php echo htmlspecialchars($usuario['id_usuario']); ?>">
+                                <?php echo htmlspecialchars($usuario['id_usuario'] . ' - ' . $usuario['nombreUsuario']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
 
                     <label for="estado">Estado</label>
                     <select id="estado" name="estado" required>
@@ -504,56 +403,53 @@ $connection->close();
 
                     <div class="buttons">
                         <button type="submit" class="create-button">Guardar</button>
-                        <!-- You might want to add a back button or a reset button -->
-                        <!-- <button type="reset" class="back-button">Limpiar</button> -->
                     </div>
                 </form>
-            </div>
-            <!-- The card2 was commented out in your original CSS, but if you want to use it, you can uncomment this div -->
-            <!-- <div class="card2">
-                <h3>Información Adicional</h3>
-                <div class="photo-section">
-                    <img src="https://placehold.co/150x150/cccccc/333333?text=User+Photo" alt="User Photo" class="user-photo">
-                    <p>Detalles del usuario o equipo.</p>
+                <div class="mt-4 text-sm text-gray-600" id="userIdDisplay">
+                    <!-- User ID will not be displayed in PHP version as it's client-side Firebase specific -->
                 </div>
-            </div> -->
+            </div>
         </div>
     </div>
 
     <script>
         // JavaScript for notification dropdown
-        document.addEventListener('DOMContentLoaded', function() {
+        function toggleNotificationDropdown() {
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            notificationDropdown.classList.toggle('show');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
             const notificationBtn = document.getElementById('notificationBtn');
             const notificationDropdown = document.getElementById('notificationDropdown');
+            const cerrarSesionBtn = document.getElementById('cerrarSesion');
+            const maintenanceForm = document.getElementById('maintenance-form');
 
-            if (notificationBtn && notificationDropdown) {
-                notificationBtn.addEventListener('click', function() {
-                    notificationDropdown.classList.toggle('show');
-                });
-
-                // Close the dropdown if the user clicks outside of it
-                window.addEventListener('click', function(event) {
-                    if (!event.target.matches('#notificationBtn') && !event.target.closest('.notification-dropdown')) {
+            // Close notification dropdown if clicked outside
+            window.addEventListener('click', (event) => {
+                if (notificationBtn && notificationDropdown) {
+                    if (!notificationBtn.contains(event.target) && !notificationDropdown.contains(event.target)) {
                         if (notificationDropdown.classList.contains('show')) {
                             notificationDropdown.classList.remove('show');
                         }
                     }
-                });
+                }
+            });
+
+            if (notificationBtn) {
+                notificationBtn.addEventListener('click', toggleNotificationDropdown);
             }
 
-            // JavaScript for "Cerrar sesión" button (example, actual logout would involve server-side logic)
-            const cerrarSesionBtn = document.getElementById('cerrarSesion');
+            // Placeholder for "Cerrar sesión" functionality
             if (cerrarSesionBtn) {
-                cerrarSesionBtn.addEventListener('click', function() {
+                cerrarSesionBtn.addEventListener('click', () => {
+                    alert('Cerrando sesión... (Funcionalidad de cierre de sesión real no implementada en este demo)');
                     // In a real application, this would send a request to a logout.php script
-                    // For demonstration, a simple alert is used.
-                    alert('Cerrando sesión...');
                     // Example: window.location.href = 'logout.php';
                 });
             }
 
             // Client-side form validation (optional, but good practice)
-            const maintenanceForm = document.getElementById('maintenance-form');
             if (maintenanceForm) {
                 maintenanceForm.addEventListener('submit', function(event) {
                     const date = document.getElementById('date').value;
@@ -563,8 +459,6 @@ $connection->close();
                     const tipoTarea = document.getElementById('tipo_tarea').value;
 
                     if (!date || !idEquipo || !idUsuario || !estado || !tipoTarea) {
-                        // This alert is a fallback if 'required' attribute fails or for custom validation messages
-                        // The PHP side will also validate and show a message if needed.
                         alert('Por favor, complete todos los campos obligatorios.');
                         event.preventDefault(); // Prevent form submission if client-side validation fails
                     }
