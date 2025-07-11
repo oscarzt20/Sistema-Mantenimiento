@@ -1,5 +1,4 @@
 <?php
-// Detalles de conexión a la base de datos
 $servername = "127.0.0.1"; // Tu nombre de servidor
 $username = "root"; // Tu nombre de usuario de la base de datos
 $password = ""; // Tu contraseña de la base de datos
@@ -12,167 +11,106 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+// --- Lógica para servir la lista de mantenimientos (para el desplegable) ---
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'get_maintenances') {
+    header('Content-Type: application/json');
+    $maintenances = [];
+    $query = "SELECT id_mantenimiento, fecha_programada, tipo_tarea, comentario FROM mantenimiento ORDER BY fecha_programada DESC";
+    $result = $conn->query($query);
+
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $maintenances[] = $row;
+        }
+        $result->free();
+    }
+    $conn->close();
+    echo json_encode($maintenances);
+    exit(); // Termina la ejecución después de enviar el JSON de mantenimientos
+}
+
+// --- Lógica para procesar el formulario de reporte (POST) ---
 // Inicializa la respuesta que se enviará al cliente (si se procesa vía AJAX)
 $response = ['success' => false, 'message' => ''];
 
-// Verifica si la solicitud es de tipo POST para procesar el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Decodifica los datos JSON enviados en el cuerpo de la solicitud
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // Extrae los datos del reporte, usando el operador null coalescing para valores predeterminados
-    $nombreEquipo = $data['nombreEquipo'] ?? '';
+    // Extrae los datos directamente relacionados con la tabla 'reporte' y el ID de mantenimiento seleccionado
     $tipoReporte = $data['tipoReporte'] ?? '';
-    $numeroSerie = $data['numeroSerie'] ?? null;
-    $costoMantenimiento = $data['costoMantenimiento'] ?? null;
-    $responsableEquipo = $data['responsableEquipo'] ?? '';
     $contenidoReporte = $data['contenidoReporte'] ?? '';
-    $nombreUbicacion = $data['nombreUbicacion'] ?? '';
-    $descripcionEquipo = $data['descripcionEquipo'] ?? '';
     $fechaCreacionReporte = $data['fechaCreacionReporte'] ?? '';
-    $fechaIngresoEquipo = $data['fechaIngresoEquipo'] ?? null;
-
+    $id_mantenimiento_seleccionado = $data['idMantenimiento'] ?? null; // ID del mantenimiento seleccionado
 
     // Valida que los campos obligatorios no estén vacíos
-    if (empty($nombreEquipo) || empty($tipoReporte) || empty($contenidoReporte) || empty($fechaCreacionReporte)) {
-        $response['message'] = 'Por favor, complete los campos obligatorios (Nombre del equipo, Tipo de Reporte, Contenido del Reporte, Fecha de Creación del Reporte).';
+    if (empty($tipoReporte) || empty($contenidoReporte) || empty($fechaCreacionReporte)) {
+        $response['message'] = 'Por favor, complete los campos obligatorios (Tipo de Reporte, Contenido del Reporte, Fecha de Creación del Reporte).';
         echo json_encode($response);
         exit(); // Termina la ejecución si faltan campos obligatorios
+    }
+
+    // Valida que el ID de mantenimiento seleccionado sea un número entero y no esté vacío
+    if (empty($id_mantenimiento_seleccionado) || !is_numeric($id_mantenimiento_seleccionado)) {
+        $response['message'] = 'Error: No se ha seleccionado un mantenimiento válido.';
+        echo json_encode($response);
+        exit();
     }
 
     // Inicia una transacción para asegurar la integridad de los datos
     $conn->begin_transaction();
 
     try {
-        // 1. Encontrar o insertar en la tabla `ubicacion`
-        $id_ubicacion = null;
-        if (!empty($nombreUbicacion)) {
-            // Prepara y ejecuta la consulta para buscar la ubicación
-            $stmt = $conn->prepare("SELECT id_ubicacion FROM ubicacion WHERE nombreUbicacion = ?");
-            $stmt->bind_param("s", $nombreUbicacion);
-            $stmt->execute();
-            $stmt->bind_result($id_ubicacion);
-            $stmt->fetch();
-            $stmt->close();
+        // --- ID de usuario para el mantenimiento (no vinculado al usuario loggeado) ---
+        // Dado que la tabla 'mantenimiento' requiere un id_usuario (NOT NULL),
+        // usaremos un ID de usuario predeterminado o genérico.
+        // Asegúrate de que este ID exista en tu tabla 'usuario'.
+        $id_usuario_generico = 1; // Puedes cambiar este ID si tienes otro usuario genérico.
 
-            // Si la ubicación no existe, la inserta
-            if (is_null($id_ubicacion)) {
-                // Asumiendo un piso y descripción predeterminados para una nueva ubicación
-                $stmt = $conn->prepare("INSERT INTO ubicacion (nombreUbicacion, piso, descripcion) VALUES (?, 1, 'Ubicación generada desde reporte')");
-                $stmt->bind_param("s", $nombreUbicacion);
-                $stmt->execute();
-                $id_ubicacion = $conn->insert_id; // Obtiene el ID de la ubicación recién insertada
-                $stmt->close();
-            }
-        }
-
-        // 2. Encontrar o insertar en la tabla `estado`
-        // Por defecto, se usa el ID 4 ('Operativo') según el volcado de la base de datos
-        $id_estado = 4;
-        $stmt = $conn->prepare("SELECT id_estado FROM estado WHERE estadoEquipos = 'Operativo'");
-        $stmt->execute();
-        $stmt->bind_result($id_estado_result);
-        $stmt->fetch();
-        if (!is_null($id_estado_result)) {
-            $id_estado = $id_estado_result; // Si 'Operativo' existe, usa su ID
-        } else {
-            // Si 'Operativo' no existe, lo inserta
-            $stmt->close();
-            $stmt = $conn->prepare("INSERT INTO estado (estadoEquipos) VALUES ('Operativo')");
-            $stmt->execute();
-            $id_estado = $conn->insert_id; // Obtiene el ID del estado recién insertado
-        }
-        $stmt->close();
-
-
-        // 3. Encontrar o insertar en la tabla `equipo`
-        $id_equipo = null;
-        if (!empty($numeroSerie)) {
-            // Prepara y ejecuta la consulta para buscar el equipo por número de serie
-            $stmt = $conn->prepare("SELECT id_equipo FROM equipo WHERE numeroSerie = ?");
-            $stmt->bind_param("i", $numeroSerie);
-            $stmt->execute();
-            $stmt->bind_result($id_equipo);
-            $stmt->fetch();
-            $stmt->close();
-        }
-
-        // Si el equipo no existe, lo inserta
-        if (is_null($id_equipo)) {
-            // Determina el tipo de equipo basado en la descripción o usa 'Desconocido'
-            $tipoEquipo = "Desconocido";
-            if (!empty($descripcionEquipo) && strpos(strtolower($descripcionEquipo), 'laptop') !== false) {
-                $tipoEquipo = 'Portátil';
-            } elseif (!empty($descripcionEquipo) && strpos(strtolower($descripcionEquipo), 'impresora') !== false) {
-                $tipoEquipo = 'Impresora';
-            }
-            // Usa la fecha actual si fechaIngresoEquipo es nula
-            $effectiveFechaIngreso = $fechaIngresoEquipo ?? date('Y-m-d');
-
-            // Prepara y ejecuta la consulta para insertar un nuevo equipo
-            $stmt = $conn->prepare("INSERT INTO equipo (nombreEquipo, tipoEquipo, numeroSerie, fechaIngreso, descripcion, id_ubicacion, id_estado) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssisiii", $nombreEquipo, $tipoEquipo, $numeroSerie, $effectiveFechaIngreso, $descripcionEquipo, $id_ubicacion, $id_estado);
-            $stmt->execute();
-            $id_equipo = $conn->insert_id; // Obtiene el ID del equipo recién insertado
-            $stmt->close();
-        }
-
-
-        // 4. Encontrar un usuario para vincularlo al mantenimiento.
-        // Por ahora, se usa un ID de usuario fijo (3, 'Juan Pérez') del volcado de la base de datos.
-        // En una aplicación real, este ID provendría de la sesión del usuario logueado.
-        $id_usuario = 3;
+        // Opcional: Verificar que el ID de usuario genérico exista en la base de datos
         $stmt = $conn->prepare("SELECT id_usuario FROM usuario WHERE id_usuario = ?");
-        $stmt->bind_param("i", $id_usuario);
+        $stmt->bind_param("i", $id_usuario_generico);
         $stmt->execute();
         $stmt->store_result();
         if ($stmt->num_rows === 0) {
-            $response['message'] = 'Error: Usuario con ID 3 no encontrado. No se puede crear el mantenimiento.';
-            $conn->rollback(); // Revierte la transacción si el usuario no existe
+            $response['message'] = 'Error: El ID de usuario genérico (' . $id_usuario_generico . ') no existe en la base de datos. Por favor, asegúrate de que exista o cambia el ID.';
+            $conn->rollback();
             echo json_encode($response);
             exit();
         }
         $stmt->close();
 
-
-        // 5. Insertar en la tabla `mantenimiento`
-        // Se asume que se crea un nuevo registro de mantenimiento para cada reporte.
-        $fechaProgramada = date('Y-m-d'); // Usa la fecha actual como fecha programada
-        $tipoTarea = "Reporte de " . $tipoReporte;
-        $comentario = "Generado por reporte: " . $contenidoReporte;
-        $estadoMantenimiento = "Pendiente"; // Estado predeterminado del mantenimiento
-
-        // Prepara y ejecuta la consulta para insertar el mantenimiento
-        $stmt = $conn->prepare("INSERT INTO mantenimiento (fecha_programada, tipo_tarea, comentario, estado, id_equipo, id_usuario) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssii", $fechaProgramada, $tipoTarea, $comentario, $estadoMantenimiento, $id_equipo, $id_usuario);
+        // Verificar que el ID de mantenimiento seleccionado exista en la base de datos
+        $stmt = $conn->prepare("SELECT id_mantenimiento FROM mantenimiento WHERE id_mantenimiento = ?");
+        $stmt->bind_param("i", $id_mantenimiento_seleccionado);
         $stmt->execute();
-        $id_mantenimiento = $conn->insert_id; // Obtiene el ID del mantenimiento recién insertado
+        $stmt->store_result();
+        if ($stmt->num_rows === 0) {
+            $response['message'] = 'Error: El mantenimiento seleccionado con ID ' . $id_mantenimiento_seleccionado . ' no existe en la base de datos.';
+            $conn->rollback();
+            echo json_encode($response);
+            exit();
+        }
         $stmt->close();
 
-        // 6. Insertar en la tabla `reporte`
-        // Concatena costoMantenimiento y responsableEquipo en el campo 'contenido' si no hay campos específicos
-        $fullContenido = "Tipo: " . $tipoReporte . ". " . $contenidoReporte;
-        if (!empty($costoMantenimiento)) {
-            $fullContenido .= ". Costo Estimado: $" . $costoMantenimiento;
-        }
-        if (!empty($responsableEquipo)) {
-            $fullContenido .= ". Responsable (reportado): " . $responsableEquipo;
-        }
-
-        // Prepara y ejecuta la consulta para insertar el reporte
+        // Insertar en la tabla `reporte` utilizando el id_mantenimiento seleccionado
         $stmt = $conn->prepare("INSERT INTO reporte (fecha_creacion, tipo_reporte, contenido, id_mantenimiento) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssi", $fechaCreacionReporte, $tipoReporte, $fullContenido, $id_mantenimiento);
+        $stmt->bind_param("sssi", $fechaCreacionReporte, $tipoReporte, $contenidoReporte, $id_mantenimiento_seleccionado);
         $stmt->execute();
         $stmt->close();
 
         // Si todo fue exitoso, confirma la transacción
         $conn->commit();
         $response['success'] = true;
-        $response['message'] = 'Reporte y mantenimiento relacionados creados exitosamente.';
+        $response['message'] = 'Reporte creado exitosamente y asociado al mantenimiento seleccionado.';
     } catch (Exception $e) {
         // Si ocurre un error, revierte la transacción
         $conn->rollback();
         $response['message'] = 'Error en la transacción: ' . $e->getMessage();
+    } finally {
+        // Cierra la conexión a la base de datos
+        $conn->close();
     }
 
     // Envía la respuesta JSON al cliente
@@ -200,10 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <header>
         <!-- Barra de navegación horizontal -->
-        <script src="../scripts/notificaciones.js" defer></script>
-        <script src="../scripts/modalUsuario.js" defer></script>
-        <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
-	
         <nav class="navbar">
             <div class="navbar-brand">Dashboard de Mantenimiento</div>
             <ul class="navbar-menu">
@@ -211,20 +145,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <li class="dropdown">
                     <a href="#" style="color: inherit; text-decoration: none;">EQUIPOS</a>
                     <div class="dropdown-content">
-                        <a href="registroEquipos.html">Registrar Equipo</a>
+                        <a class="active" href="registroEquipos.html">Registrar Equipo</a>
                         <a href="editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
                     </div>
                 </li>
-                <li class="dropdown">
-                    <a>MANTENIMIENTOS</a>
-                    <div class="dropdown-content">
-                        <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
-                            mantenimiento</a>
-                        <a href="programar mantenimiento.html">Programar mantenimiento</a>
-
-                        <a href="historialMantenimientos.php">Historial de mantenimientos</a>
-                    </div>
-                </li>
+                <li><a href="historialMantenimientos.php"
+                        style="color: inherit; text-decoration: none;">MANTENIMIENTOS</a></li>
                 <li class="dropdown">
                     <a href="#" style="color: inherit; text-decoration: none;">REPORTES</a>
                     <div class="dropdown-content">
@@ -235,7 +161,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <li class="dropdown">
                     <a>USUARIOS</a>
                     <div class="dropdown-content">
-                        <!-- <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>  -->
+                        <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de
+                            Usuarios</a>
                         <a href="informacionUsuario.php">Gestionar Usuarios</a>
                         <button class="btt-info" id="cerrarSesion">Cerrar sesión</button>
                     </div>
@@ -243,26 +170,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </ul>
             <div class="navbar-notifications">
                 <button class="notification-btn" onclick="toggleDropdown()">
-                Notificaciones <span id="notification-badge" class="badge">0</span>
+                    Notificaciones <span id="notification-badge" class="badge">0</span>
                 </button>
                 <div class="notification-dropdown" id="dropdown">
-                <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
+                    <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
                 </div>
             </div>
         </nav>
-
-        <div class="userContainer oculto">
-            <button id="btt-cerrarInfo">x</button>
-            <nav class="userInfo">
-                <img src="../img/persona.jpg" id="img-user" alt="Usuario">
-                <p class="p-info" id="info-nombre">Nombre</p>
-                <p class="p-info" id="info-correo">Correo Electrico</p>
-                <p class="p-info" id="info-estado">Estado</p>
-                <p class="p-info" id="info-rol">Rol</p><br>
-            </nav>
-            <button class="btt-info" id="btt-cambiarCuenta">Cambiar cuenta</button>
-            <button class="btt-info" id="btt-cerrarSesion">Cerrar sesión</button>
-        </div>
     </header>
 
     <!-- Contenido principal de la aplicación -->
@@ -277,55 +191,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form id="reportForm" class="space-y-4">
                 <!-- Grid para campos de formulario (2 columnas en md y arriba, 1 columna en sm) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <!-- Campo: Nombre del equipo -->
-                    <div>
-                        <label for="nombreEquipo" class="block text-sm font-medium mb-1">Nombre del equipo</label>
-                        <input type="text" id="nombreEquipo" name="nombreEquipo" placeholder="Laptop HP, etc."
-                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
                     <!-- Campo: Tipo de Reporte (Mapped to tipo_reporte in reporte table) -->
                     <div>
                         <label for="tipoReporte" class="block text-sm font-medium mb-1">Tipo de Reporte</label>
                         <input type="text" id="tipoReporte" name="tipoReporte" placeholder="Incidente, Mantenimiento, etc."
                             class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500" required>
                     </div>
-                    <!-- Campo: No. de serie (Mapped to numeroSerie in equipo table) -->
-                    <div>
-                        <label for="numeroSerie" class="block text-sm font-medium mb-1">No. de serie</label>
-                        <input type="number" id="numeroSerie" name="numeroSerie" placeholder="Solo números"
-                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <!-- Campo: Costo del mantenimiento (Not directly in schema, can be part of 'contenido' or a new field) -->
-                    <div>
-                        <label for="costoMantenimiento" class="block text-sm font-medium mb-1">Costo del
-                            mantenimiento</label>
-                        <input type="number" id="costoMantenimiento" name="costoMantenimiento" placeholder="Int*"
-                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <!-- Campo: Responsable del equipo (Could be part of 'contenido' or linked to usuario) -->
-                    <div>
-                        <label for="responsableEquipo" class="block text-sm font-medium mb-1">Responsable del
-                            equipo</label>
-                        <input type="text" id="responsableEquipo" name="responsableEquipo" placeholder="Nombre completo"
-                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <!-- Campo: Observaciones (Mapped to contenido in reporte table) -->
+                    <!-- Campo: Contenido del Reporte (Mapped to contenido in reporte table) -->
                     <div>
                         <label for="contenidoReporte" class="block text-sm font-medium mb-1">Contenido del Reporte</label>
                         <textarea id="contenidoReporte" name="contenidoReporte" rows="3" placeholder="Descripción detallada del reporte."
                             class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 resize-y" required></textarea>
-                    </div>
-                    <!-- Campo: Locación (Mapped to nombreUbicacion in ubicacion table, but here as text) -->
-                    <div>
-                        <label for="nombreUbicacion" class="block text-sm font-medium mb-1">Locación</label>
-                        <input type="text" id="nombreUbicacion" name="nombreUbicacion" placeholder="Oficina Principal, etc."
-                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <!-- Campo: Descripción del Equipo (Mapped to descripcion in equipo table) -->
-                    <div>
-                        <label for="descripcionEquipo" class="block text-sm font-medium mb-1">Descripción del Equipo</label>
-                        <textarea id="descripcionEquipo" name="descripcionEquipo" rows="3" placeholder="Descripción del equipo (ej. Equipo de cómputo para desarrollo)."
-                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 resize-y"></textarea>
                     </div>
                     <!-- Campo: Fecha de creación del reporte (Mapped to fecha_creacion in reporte table) -->
                     <div>
@@ -333,11 +209,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="date" id="fechaCreacionReporte" name="fechaCreacionReporte"
                             class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500" required>
                     </div>
-                    <!-- Campo: Fecha de Ingreso del Equipo (Mapped to fechaIngreso in equipo table) -->
+                    <!-- Nuevo Campo: Mantenimiento Asociado (Dropdown) -->
                     <div>
-                        <label for="fechaIngresoEquipo" class="block text-sm font-medium mb-1">Fecha de Ingreso del Equipo</label>
-                        <input type="date" id="fechaIngresoEquipo" name="fechaIngresoEquipo"
-                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500">
+                        <label for="idMantenimiento" class="block text-sm font-medium mb-1">Mantenimiento Asociado</label>
+                        <select id="idMantenimiento" name="idMantenimiento"
+                            class="w-full p-2 rounded-md bg-white border border-gray-300 text-[#333] focus:ring-blue-500 focus:border-blue-500" required>
+                            <option value="">Seleccione un mantenimiento</option>
+                            <!-- Las opciones se cargarán dinámicamente con JavaScript -->
+                        </select>
                     </div>
                 </div>
 
@@ -356,27 +235,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </main>
 
-    <!-- Enlace a nuestro archivo JavaScript -->
+    <!-- Enlace a nuestro archivo JavaScript
     <script src="../scripts/generarReportes.js"></script>
     <script src="../scripts/notifications.js"></script>
-    <!-- <script>
+    <script>
         // Script para cerrar sesión y verificar la sesión del usuario
         document.getElementById('cerrarSesion').addEventListener('click', function() {
             // Eliminar cualquier dato de sesión del almacenamiento local si existe
             localStorage.removeItem('userSession');
+            // Ya no se usa localStorage.removeItem('userId') aquí, ya que esta página no lo envía.
             console.log('Sesión cerrada');
             // Redirigir al usuario a la página de inicio de sesión
-            window.location.href = '../pages/Login.php';
+            window.location.href = 'Login.html';
         });
 
-        // Asegurarse de que el usuario esté logueado
+        // Asegurarse de que el usuario esté loggeado
         document.addEventListener('DOMContentLoaded', function() {
             const userSession = localStorage.getItem('userSession');
+            // La verificación de userId se ha eliminado de aquí ya que no se usa para el envío del formulario.
+            // Si la página requiere que un usuario esté loggeado para acceder, userSession es suficiente.
             if (!userSession) {
-                window.location.href = '../pages/Login.php'; // Redirigir si no hay sesión
+                window.location.href = 'Login.html'; // Redirigir si no hay sesión
             }
-        });
-    </script> -->
+        }); -->
+    </script>
 </body>
 
 </html>
