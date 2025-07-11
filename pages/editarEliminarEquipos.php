@@ -99,18 +99,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_equipo'])) {
     $conn->begin_transaction();
 
     try {
-        // Eliminar registros relacionados en historialtecnico
-        $stmt_historial = $conn->prepare("DELETE FROM historialtecnico WHERE id_equipo = ?");
-        $stmt_historial->bind_param("i", $id_equipo_delete);
-        $stmt_historial->execute();
-        $stmt_historial->close();
+        // Eliminar registros relacionados en historialtecnico (si existe la tabla)
+        if ($conn->query("SHOW TABLES LIKE 'historialtecnico'")->num_rows > 0) {
+            $stmt_historial = $conn->prepare("DELETE FROM historialtecnico WHERE id_equipo = ?");
+            $stmt_historial->bind_param("i", $id_equipo_delete);
+            $stmt_historial->execute();
+            $stmt_historial->close();
+        }
 
-        // Eliminar registros relacionados en mantenimiento y luego notificacion y reporte
-        // Primero, obtener los IDs de mantenimiento para eliminar las notificaciones y reportes relacionados
+        // Obtener IDs de mantenimientos relacionados
         $stmt_mantenimiento_ids = $conn->prepare("SELECT id_mantenimiento FROM mantenimiento WHERE id_equipo = ?");
         $stmt_mantenimiento_ids->bind_param("i", $id_equipo_delete);
         $stmt_mantenimiento_ids->execute();
         $result_mantenimiento_ids = $stmt_mantenimiento_ids->get_result();
+
         $mantenimiento_ids = [];
         while ($row = $result_mantenimiento_ids->fetch_assoc()) {
             $mantenimiento_ids[] = $row['id_mantenimiento'];
@@ -118,24 +120,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_equipo'])) {
         $stmt_mantenimiento_ids->close();
 
         if (!empty($mantenimiento_ids)) {
-            $mantenimiento_ids_str = implode(",", $mantenimiento_ids);
+            // Eliminar notificaciones
+            $placeholders = implode(',', array_fill(0, count($mantenimiento_ids), '?'));
+            $types = str_repeat('i', count($mantenimiento_ids));
 
-            // Eliminar registros relacionados en notificacion
-            $stmt_notificacion = $conn->prepare("DELETE FROM notificacion WHERE id_mantenimiento IN ($mantenimiento_ids_str)");
+            // NOTIFICACION
+            $stmt_notificacion = $conn->prepare("DELETE FROM notificacion WHERE id_mantenimiento IN ($placeholders)");
+            $stmt_notificacion->bind_param($types, ...$mantenimiento_ids);
             $stmt_notificacion->execute();
             $stmt_notificacion->close();
 
-            // Eliminar registros relacionados en reporte
-            $stmt_reporte = $conn->prepare("DELETE FROM reporte WHERE id_mantenimiento IN ($mantenimiento_ids_str)");
+            // REPORTE
+            $stmt_reporte = $conn->prepare("DELETE FROM reporte WHERE id_mantenimiento IN ($placeholders)");
+            $stmt_reporte->bind_param($types, ...$mantenimiento_ids);
             $stmt_reporte->execute();
             $stmt_reporte->close();
 
-            // Finalmente, eliminar registros en mantenimiento
+            // MANTENIMIENTO
             $stmt_mantenimiento = $conn->prepare("DELETE FROM mantenimiento WHERE id_equipo = ?");
             $stmt_mantenimiento->bind_param("i", $id_equipo_delete);
             $stmt_mantenimiento->execute();
             $stmt_mantenimiento->close();
         }
+
 
         // Ahora, eliminar el equipo en sí
         $stmt = $conn->prepare("DELETE FROM equipo WHERE id_equipo = ?");
