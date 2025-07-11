@@ -220,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="dropdown-content">
                         <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
                             mantenimiento</a>
-                        <a href="programar mantenimiento.html">Programar mantenimiento</a>
+                        <a href="programar mantenimiento.php">Programar mantenimiento</a>
 
                         <a href="historialMantenimientos.php">Historial de mantenimientos</a>
                     </div>
