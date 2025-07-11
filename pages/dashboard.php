@@ -1,18 +1,41 @@
+<?php
+session_start();
+include '../scripts/conexion.php';
+
+// Verificar si el usuario está logueado
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Obtener información del usuario actual
+$usuario_id = $_SESSION['usuario_id'];
+$query_usuario = "SELECT u.*, r.nombreRol FROM usuario u JOIN rol r ON u.id_rol = r.id_rol WHERE u.id_usuario = ?";
+$stmt_usuario = $connection->prepare($query_usuario);
+$stmt_usuario->bind_param("i", $usuario_id);
+$stmt_usuario->execute();
+$result_usuario = $stmt_usuario->get_result();
+$usuario = $result_usuario->fetch_assoc();
+?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard de Mantenimiento</title>
     <link rel="stylesheet" href="../Styles/dashboard.css">
+    <link rel="stylesheet" href="../Styles/estiloGeneral.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../scripts/notificaciones.js" defer></script>
+    <script src="../scripts/modalUsuario.js" defer></script>
     <style>
         .dropdown-content {
             display: none;
             position: absolute;
-            background-color: #2c3e50;  
+            background-color: #2c3e50;
             min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1;
             top: 100%;
             left: 0;
@@ -24,22 +47,22 @@
             display: inline-block;
             height: 100%;
         }
-        
+
         .dropdown-content a {
             color: white;
             padding: 12px 16px;
             text-decoration: none;
             display: block;
         }
-        
+
         .dropdown-content a:hover {
             background-color: #34495e;
         }
-        
+
         .dropdown:hover .dropdown-content {
             display: block;
         }
-        
+
         .navbar-menu li {
             padding: 0 15px;
             cursor: pointer;
@@ -50,12 +73,12 @@
         }
 
         .userContainer {
-            position: fixed;        
-            top: 50%;                 
-            left: 50%;                
+            position: fixed;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
             background-color: #233241;
-            z-index: 1000;         
+            z-index: 1000;
             border-radius: 8px;
             width: 410px;
             height: 250px;
@@ -139,34 +162,63 @@
             font-weight: bold;
             margin-right: 10px;
         }
-        
+
         .error {
             background-color: #ff5252;
             color: white;
         }
-        
+
         .warning {
             background-color: #ffc107;
             color: black;
         }
-        
+
         .info {
             background-color: #2196f3;
             color: white;
+        }
+
+        .online {
+            color: #4CAF50;
+        }
+
+        .offline {
+            color: #f44336;
+        }
+
+        .device {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .maintenance-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .alert-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+
+        .no-maintenance,
+        .no-alerts {
+            color: #777;
+            font-style: italic;
         }
     </style>
 </head>
 
 <body>
-	<!-- Barra de navegación horizontal -->
-    <script src="../scripts/notificaciones.js" defer></script>
-    <script src="../scripts/modalUsuario.js" defer></script>
-    <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
-
+    <!-- Barra de navegación horizontal -->
     <nav class="navbar">
         <div class="navbar-brand">Dashboard de Mantenimiento</div>
         <ul class="navbar-menu">
-            <li><a href="dashboard.php" style="color: inherit; text-decoration: none;">INICIO</a></li>
+            <li class="active"><a href="dashboard.php" style="color: inherit; text-decoration: none;">INICIO</a></li>
             <li class="dropdown">
                 <a href="#" style="color: inherit; text-decoration: none;">EQUIPOS</a>
                 <div class="dropdown-content">
@@ -175,12 +227,10 @@
                 </div>
             </li>
             <li class="dropdown">
-                <a>MANTENIMIENTOS</a>
+                <a href="#" style="color: inherit; text-decoration: none;">MANTENIMIENTOS</a>
                 <div class="dropdown-content">
-                    <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
-                        mantenimiento</a>
+                    <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de mantenimiento</a>
                     <a href="programar mantenimiento.html">Programar mantenimiento</a>
-
                     <a href="historialMantenimientos.php">Historial de mantenimientos</a>
                 </div>
             </li>
@@ -192,9 +242,8 @@
                 </div>
             </li>
             <li class="dropdown">
-                <a>USUARIOS</a>
+                <a href="#" style="color: inherit; text-decoration: none;">USUARIOS</a>
                 <div class="dropdown-content">
-                    <!-- <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>  -->
                     <a href="informacionUsuario.php">Gestionar Usuarios</a>
                     <button class="btt-info" id="cerrarSesion">Cerrar sesión</button>
                 </div>
@@ -202,10 +251,10 @@
         </ul>
         <div class="navbar-notifications">
             <button class="notification-btn" onclick="toggleDropdown()">
-            Notificaciones <span id="notification-badge" class="badge">0</span>
+                Notificaciones <span id="notification-badge" class="badge">0</span>
             </button>
             <div class="notification-dropdown" id="dropdown">
-            <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
+                <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
             </div>
         </div>
     </nav>
@@ -214,10 +263,10 @@
         <button id="btt-cerrarInfo">x</button>
         <nav class="userInfo">
             <img src="../img/persona.jpg" id="img-user" alt="Usuario">
-            <p class="p-info" id="info-nombre">Nombre</p>
-            <p class="p-info" id="info-correo">Correo Electrónico</p>
-            <p class="p-info" id="info-estado">Estado</p>
-            <p class="p-info" id="info-rol">Rol</p>
+            <p class="p-info" id="info-nombre"><?php echo htmlspecialchars($usuario['nombreUsuario'] . ' ' . $usuario['apellidoP']); ?></p>
+            <p class="p-info" id="info-correo"><?php echo htmlspecialchars($usuario['correo']); ?></p>
+            <p class="p-info" id="info-estado"><?php echo htmlspecialchars($usuario['estadoUsuario']); ?></p>
+            <p class="p-info" id="info-rol"><?php echo htmlspecialchars($usuario['nombreRol']); ?></p>
         </nav>
         <button class="btt-info" id="btt-cambiarCuenta">Cambiar cuenta</button>
         <button class="btt-info" id="btt-cerrarSesion">Cerrar sesión</button>
@@ -231,18 +280,23 @@
                 <h3>Dispositivos Activos</h3>
                 <div class="active-devices">
                     <?php
-                    include '../scripts/conexion.php';
                     $query = "SELECT e.nombreEquipo, es.estadoEquipos 
                               FROM equipo e 
                               JOIN estado es ON e.id_estado = es.id_estado
                               LIMIT 5";
                     $result = $connection->query($query);
-                    
-                    while($row = $result->fetch_assoc()) {
-                        $statusClass = strtolower($row['estadoEquipos']) == 'operativo' ? 'online' : 'offline';
-                        echo '<div class="device '.$statusClass.'">
-                                <span class="device-name">'.$row['nombreEquipo'].'</span>
-                                <span class="device-status">'.$row['estadoEquipos'].'</span>
+
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $statusClass = strtolower($row['estadoEquipos']) == 'operativo' ? 'online' : 'offline';
+                            echo '<div class="device">
+                                    <span class="device-name">' . htmlspecialchars($row['nombreEquipo']) . '</span>
+                                    <span class="device-status ' . $statusClass . '">' . htmlspecialchars($row['estadoEquipos']) . '</span>
+                                  </div>';
+                        }
+                    } else {
+                        echo '<div class="device">
+                                <span class="no-devices">No hay equipos registrados</span>
                               </div>';
                     }
                     ?>
@@ -263,19 +317,19 @@
                              WHERE DATE(m.fecha_programada) = ?
                              ORDER BY m.fecha_programada ASC
                              LIMIT 5";
-                    
+
                     $stmt = $connection->prepare($query);
                     $stmt->bind_param("s", $hoy);
                     $stmt->execute();
                     $result = $stmt->get_result();
-                    
+
                     if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
+                        while ($row = $result->fetch_assoc()) {
                             $hora = date('H:i A', strtotime($row['fecha_programada']));
                             echo '<div class="maintenance-item">
-                                    <span class="time">'.$hora.'</span>
-                                    <span class="description">'.$row['tipo_tarea'].' - '.$row['estado'].'</span>
-                                    <span class="equipo">'.$row['nombreEquipo'].' ('.$row['nombreUsuario'].' '.$row['apellidoP'].')</span>
+                                    <span class="time">' . $hora . '</span>
+                                    <span class="description">' . htmlspecialchars($row['tipo_tarea']) . ' - ' . htmlspecialchars($row['estado']) . '</span>
+                                    <span class="equipo">' . htmlspecialchars($row['nombreEquipo']) . ' (' . htmlspecialchars($row['nombreUsuario']) . ' ' . htmlspecialchars($row['apellidoP']) . ')</span>
                                   </div>';
                         }
                     } else {
@@ -299,13 +353,13 @@
                           ORDER BY r.fecha_creacion DESC
                           LIMIT 3";
                 $result = $connection->query($query);
-                
+
                 if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
+                    while ($row = $result->fetch_assoc()) {
                         $alertClass = strtolower($row['tipo_reporte']);
                         echo '<div class="alert-item">
-                                <span class="alert-type '.$alertClass.'">'.$row['tipo_reporte'].'</span>
-                                <span class="alert-message">'.$row['contenido'].' ('.$row['nombreEquipo'].')</span>
+                                <span class="alert-type ' . $alertClass . '">' . htmlspecialchars($row['tipo_reporte']) . '</span>
+                                <span class="alert-message">' . htmlspecialchars($row['contenido']) . ' (' . htmlspecialchars($row['nombreEquipo']) . ')</span>
                               </div>';
                     }
                 } else {
@@ -343,15 +397,21 @@
                                  ORDER BY m.fecha_programada ASC
                                  LIMIT 5";
                         $result = $connection->query($query);
-                        
-                        while($row = $result->fetch_assoc()) {
-                            $fecha = date('d/m/Y', strtotime($row['fecha_programada']));
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $fecha = date('d/m/Y', strtotime($row['fecha_programada']));
+                                echo '<tr>
+                                        <td>' . $fecha . '</td>
+                                        <td>' . htmlspecialchars($row['nombreUsuario']) . ' ' . htmlspecialchars($row['apellidoP']) . '</td>
+                                        <td>' . htmlspecialchars($row['nombreEquipo']) . '</td>
+                                        <td>' . htmlspecialchars($row['tipo_tarea']) . '</td>
+                                        <td>' . htmlspecialchars($row['estado']) . '</td>
+                                      </tr>';
+                            }
+                        } else {
                             echo '<tr>
-                                    <td>'.$fecha.'</td>
-                                    <td>'.$row['nombreUsuario'].' '.$row['apellidoP'].'</td>
-                                    <td>'.$row['nombreEquipo'].'</td>
-                                    <td>'.$row['tipo_tarea'].'</td>
-                                    <td>'.$row['estado'].'</td>
+                                    <td colspan="5" class="no-data">No hay mantenimientos programados</td>
                                   </tr>';
                         }
                         ?>
@@ -374,38 +434,48 @@
         document.addEventListener("DOMContentLoaded", () => {
             // Obtener datos para el gráfico
             fetch("../scripts/obtenerDatosGrafico.php")
-            .then(response => response.json())
-            .then(data => {
-                const ctx = document.getElementById('maintenanceChart').getContext('2d');
-                const maintenanceChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.meses,
-                        datasets: [{
-                            label: 'Mantenimientos realizados',
-                            data: data.cantidades,
-                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                .then(response => response.json())
+                .then(data => {
+                    const ctx = document.getElementById('maintenanceChart').getContext('2d');
+                    const maintenanceChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.meses,
+                            datasets: [{
+                                label: 'Mantenimientos realizados',
+                                data: data.cantidades,
+                                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
                             }
                         }
-                    }
+                    });
                 });
+
+            // Manejar el cierre de sesión
+            document.getElementById('btt-cerrarSesion').addEventListener('click', function() {
+                window.location.href = '../scripts/cerrar_sesion.php';
             });
 
-            // // Mostrar/ocultar notificaciones
-            // document.querySelector('.notification-btn').addEventListener('click', function() {
-            //     document.querySelector('.notification-dropdown').classList.toggle('show');
-            // });
+            // Mostrar información del usuario
+            document.querySelector('.navbar-brand').addEventListener('click', function() {
+                document.querySelector('.userContainer').classList.toggle('oculto');
+            });
 
+            // Cerrar el modal de información de usuario
+            document.getElementById('btt-cerrarInfo').addEventListener('click', function() {
+                document.querySelector('.userContainer').classList.add('oculto');
+            });
         });
     </script>
 </body>
+
 </html>
