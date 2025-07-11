@@ -149,21 +149,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <a href="editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
                     </div>
                 </li>
-<<<<<<< HEAD
                 <li><a href="historialMantenimientos.php"
                         style="color: inherit; text-decoration: none;">MANTENIMIENTOS</a></li>
-=======
-                <li class="dropdown">
-                    <a>MANTENIMIENTOS</a>
-                    <div class="dropdown-content">
-                        <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
-                            mantenimiento</a> -->
-                        <a href="programar mantenimiento.php">Programar mantenimiento</a>
-
-                        <a href="historialMantenimientos.php">Historial de mantenimientos</a>
-                    </div>
-                </li>
->>>>>>> 68eaff906c3e602330697468da896ff18080c888
                 <li class="dropdown">
                     <a href="#" style="color: inherit; text-decoration: none;">REPORTES</a>
                     <div class="dropdown-content">
