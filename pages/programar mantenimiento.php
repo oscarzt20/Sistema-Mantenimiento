@@ -1,10 +1,13 @@
 <?php
 session_start(); // Start the session if you intend to use session variables
 
-$servername = "localhost";
-$username = "root";
+$host = "localhost";
+$user = "root";
 $password = "";
-$dbname = "mantenimientobd";
+$database = "mantenimientobd";
+
+// Initialize an empty message variable
+$mensaje = "";
 
 // Establish database connection
 $connection = new mysqli($host, $user, $password, $database);
@@ -25,14 +28,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $comentario = $_POST['comentario'];
 
     // SQL query to insert data using prepared statements for security
-    $sql = "INSERT INTO mantenimientos (fecha_programada, tipo_tarea, comentario, estado, id_equipo, id_usuario)
+    $sql = "INSERT INTO mantenimiento (fecha_programada, tipo_tarea, comentario, estado, id_equipo, id_usuario)
             VALUES (?, ?, ?, ?, ?, ?)";
 
     // Prepare the statement
     $stmt = $connection->prepare($sql);
 
     if ($stmt === FALSE) {
-        echo "<script>alert('Error al preparar la consulta: " . $connection->error . "');</script>";
+        $mensaje = "<div class='alert alert-danger'>Error al preparar la consulta: " . $connection->error . "</div>";
     } else {
         // Bind parameters:
         // s = string, i = integer, d = double (for float)
@@ -41,9 +44,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Execute the statement
         if ($stmt->execute()) {
-            echo "<script>alert('Mantenimiento registrado exitosamente.');</script>";
+            $mensaje = "<div class='alert alert-success'>Mantenimiento registrado exitosamente.</div>";
         } else {
-            echo "<script>alert('Error al registrar el mantenimiento: " . $stmt->error . "');</script>";
+            $mensaje = "<div class='alert alert-danger'>Error al registrar el mantenimiento: " . $stmt->error . "</div>";
         }
         // Close the statement
         $stmt->close();
@@ -345,6 +348,27 @@ $connection->close();
             background-color: #f5f7fa;
         }
 
+        /* Styles for alert messages */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .navbar-menu {
@@ -447,7 +471,9 @@ $connection->close();
             <!-- Tarjeta de programar mantenimientos -->
             <div class="card1">
                 <h3>Programar Mantenimientos</h3>
-                <form id="maintenance-form" method="POST">
+                <!-- Message display area -->
+                <?php echo $mensaje; ?>
+                <form id="maintenance-form" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                     <label for="date">Fecha</label>
                     <input type="date" id="date" name="fecha" required>
 
@@ -515,7 +541,9 @@ $connection->close();
             const cerrarSesionBtn = document.getElementById('cerrarSesion');
             if (cerrarSesionBtn) {
                 cerrarSesionBtn.addEventListener('click', function() {
-                    alert('Cerrando sesión...'); // Replace with actual logout logic
+                    // In a real application, this would send a request to a logout.php script
+                    // For demonstration, a simple alert is used.
+                    alert('Cerrando sesión...');
                     // Example: window.location.href = 'logout.php';
                 });
             }
@@ -531,8 +559,10 @@ $connection->close();
                     const tipoTarea = document.getElementById('tipo_tarea').value;
 
                     if (!date || !idEquipo || !idUsuario || !estado || !tipoTarea) {
+                        // This alert is a fallback if 'required' attribute fails or for custom validation messages
+                        // The PHP side will also validate and show a message if needed.
                         alert('Por favor, complete todos los campos obligatorios.');
-                        event.preventDefault(); // Prevent form submission
+                        event.preventDefault(); // Prevent form submission if client-side validation fails
                     }
                 });
             }
