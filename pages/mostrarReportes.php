@@ -526,10 +526,6 @@ $conn->close();
                     class="px-6 py-3 bg-[#87ceeb] text-[#1a1a2e] font-semibold rounded-md hover:bg-[#6cbada] focus:outline-none focus:ring-2 focus:ring-[#87ceeb] focus:ring-offset-2">
                     Imprimir
                 </button>
-                <button id="analyze-report-button"
-                    class="px-6 py-3 bg-[#87ceeb] text-[#1a1a2e] font-semibold rounded-md hover:bg-[#6cbada] focus:outline-none focus:ring-2 focus:ring-[#87ceeb] focus:ring-offset-2">
-                    Analizar Reporte ✨
-                </button>
             </div>
 
             <div id="analysis-output" class="mt-8 p-4 bg-gray-100 rounded-lg border border-gray-200 hidden">
