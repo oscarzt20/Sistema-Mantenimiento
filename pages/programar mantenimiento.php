@@ -418,7 +418,10 @@ $connection->close();
 
 <body>
 
-    <!-- Barra de navegación -->
+	<!-- Barra de navegación horizontal -->
+    <script src="../scripts/notificaciones.js" defer></script>
+	<link rel="stylesheet" href="../Styles/estiloGeneral.css" />
+	
     <nav class="navbar">
         <div class="navbar-brand">Dashboard de Mantenimiento</div>
         <ul class="navbar-menu">
@@ -427,15 +430,16 @@ $connection->close();
                 <a href="#" style="color: inherit; text-decoration: none;">EQUIPOS</a>
                 <div class="dropdown-content">
                     <a href="registroEquipos.html">Registrar Equipo</a>
-                    <a href="editarEliminarEquipos.html">Editar/Eliminar Equipo</a>
+                    <a href="editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
                 </div>
             </li>
             <li class="dropdown">
                 <a>MANTENIMIENTOS</a>
                 <div class="dropdown-content">
-                    <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
-                        mantenimiento</a>
-                    <a href="programar mantenimiento.php">Programar mantenimiento</a>
+                    <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
+                        mantenimiento</a> -->
+                    <a href="programar mantenimiento.html">Programar mantenimiento</a>
+
                     <a href="historialMantenimientos.php">Historial de mantenimientos</a>
                 </div>
             </li>
@@ -449,18 +453,18 @@ $connection->close();
             <li class="dropdown">
                 <a>USUARIOS</a>
                 <div class="dropdown-content">
-                    <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>
+                    <!-- <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>  -->
                     <a href="informacionUsuario.php">Gestionar Usuarios</a>
                     <button class="btt-info" id="cerrarSesion">Cerrar sesión</button>
                 </div>
             </li>
         </ul>
         <div class="navbar-notifications">
-            <button class="notification-btn" id="notificationBtn">Notificaciones <span class="badge">3</span></button>
-            <div class="notification-dropdown" id="notificationDropdown">
-                <div class="notification-item">Mantenimiento preventivo para Equipo A</div>
-                <div class="notification-item">Alerta crítica en Equipo B</div>
-                <div class="notification-item">Nuevo mantenimiento programado</div>
+            <button class="notification-btn" onclick="toggleDropdown()">
+            Notificaciones <span id="notification-badge" class="badge">0</span>
+            </button>
+            <div class="notification-dropdown" id="dropdown">
+            <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
             </div>
         </div>
     </nav>
