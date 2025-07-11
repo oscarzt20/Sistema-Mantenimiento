@@ -66,7 +66,7 @@
                 <img src="../img/fastbank.jpg" alt="" id="img_fastbank">
             </div>
             <form method="POST" class="navLogin">
-                <p class="p_login">Usuario</p>
+                <p class="p_login">Correo</p>
                 <input type="text" name="user" placeholder="Usuario">
                 <p class="p_login">Constraseña</p>
                 <input type="password" name="password" placeholder="Contraseña"> 

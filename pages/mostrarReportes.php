@@ -173,6 +173,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../scripts/modalUsuario.js" defer></script>
     <title>Aplicación Web de Mantenimiento</title>
     <link rel="stylesheet" href="/Styles/mostrarReportes.css">
     <link rel="stylesheet" href="/Styles/estiloGeneral.css">
@@ -448,6 +449,18 @@ $conn->close();
                 </div>
             </div>
         </nav>
+    <div class="userContainer oculto">
+        <button id="btt-cerrarInfo">x</button>
+        <nav class="userInfo">
+            <img src="../img/persona.jpg" id="img-user" alt="Usuario">
+            <p class="p-info" id="info-nombre">Nombre</p>
+            <p class="p-info" id="info-correo">Correo Electrónico</p>
+            <p class="p-info" id="info-estado">Estado</p>
+            <p class="p-info" id="info-rol">Rol</p>
+        </nav>
+        <button class="btt-info" id="btt-cambiarCuenta">Cambiar cuenta</button>
+        <button class="btt-info" id="btt-cerrarSesion">Cerrar sesión</button>
+    </div>
     </header>
 
     <main class="flex-grow container mx-auto p-6 flex flex-col items-center justify-start">

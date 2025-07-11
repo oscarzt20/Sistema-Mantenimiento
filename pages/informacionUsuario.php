@@ -26,6 +26,7 @@ $resultado = $connection->query($sql);
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../scripts/infoUsuario.js" defer></script>
     <script src="../scripts/dashboard.js" defer></script>
+    <script src="../scripts/modalUsuario.js" defer></script>
     <style>
         /* Estilos para el menú despleegable */
     .dropdown-content {
@@ -248,7 +249,7 @@ $resultado = $connection->query($sql);
                         while($row = $resultado->fetch_assoc()) {
                             $nombreCompleto = $row['nombreUsuario'] . " " . $row['apellidoP'] . " " . $row['apellidoM'];
                             $correo = $row['correo'];
-                            $estado = $row['activoEstado'];
+                            $estado = 1;
                             
                             // Determinar color de estado
                             $colorClase = "";

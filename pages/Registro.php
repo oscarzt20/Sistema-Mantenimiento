@@ -60,8 +60,8 @@
             } else {
 
                 // insertar usuario
-                $sql = "INSERT INTO usuario (nombreUsuario, apellidoP, apellidoM, correo, contraseña, activoEstado, id_rol) 
-                        VALUES (?, ?, ?, ?, ?, 1, 2)";
+                $sql = "INSERT INTO usuario (nombreUsuario, apellidoP, apellidoM, correo, contraseña) 
+                        VALUES (?, ?, ?, ?, ?)";
 
                 $stmt = $connection->prepare($sql);
                 $stmt->bind_param("sssss", $nombreUsuario, $apellidoP, $apellidoM, $correo, $password);

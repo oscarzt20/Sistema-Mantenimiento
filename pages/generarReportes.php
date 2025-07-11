@@ -201,6 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header>
         <!-- Barra de navegación horizontal -->
         <script src="../scripts/notificaciones.js" defer></script>
+        <script src="../scripts/modalUsuario.js" defer></script>
         <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
 	
         <nav class="navbar">
@@ -249,6 +250,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
         </nav>
+
+        <div class="userContainer oculto">
+            <button id="btt-cerrarInfo">x</button>
+            <nav class="userInfo">
+                <img src="../img/persona.jpg" id="img-user" alt="Usuario">
+                <p class="p-info" id="info-nombre">Nombre</p>
+                <p class="p-info" id="info-correo">Correo Electrico</p>
+                <p class="p-info" id="info-estado">Estado</p>
+                <p class="p-info" id="info-rol">Rol</p><br>
+            </nav>
+            <button class="btt-info" id="btt-cambiarCuenta">Cambiar cuenta</button>
+            <button class="btt-info" id="btt-cerrarSesion">Cerrar sesión</button>
+        </div>
     </header>
 
     <!-- Contenido principal de la aplicación -->
