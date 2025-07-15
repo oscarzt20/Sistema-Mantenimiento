@@ -43,12 +43,24 @@
         $query->close();
 
     }
-
-    function mostrarError($mensaje) {
-        
-        echo "<dialog open style='color:red; padding: 1em; border: 1px solid red;'>$mensaje</dialog>";
-    }
-
+function mostrarError($mensaje) {
+    echo '<div class="error-popup" style="
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        color: red;
+        padding: 15px 25px;
+        border: 2px solid red;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        font-weight: bold;
+        text-align: center;
+        animation: fadeIn 0.3s ease-in-out;
+    ">'.$mensaje.'</div>';
+}
 ?>
 
 <!DOCTYPE html>
@@ -92,3 +104,12 @@
     </script>
 </body>
 </html>
+<script>
+    // Elimina el mensaje de error después de 3 segundos
+    setTimeout(() => {
+        const errorPopup = document.querySelector('.error-popup');
+        if (errorPopup) {
+            errorPopup.remove();
+        }
+    }, 1000); // 3000 milisegundos = 3 segundos
+</script>

@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historial de Mantenimientos</title>
+    <title>Gestionar Mantenimientos</title>
     <style>
         /* Estilos generales */
         body {
@@ -147,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             /* Centrar el contenido */
         }
 
-        /* Tabla de historial de mantenimientos */
+        /* Tabla de Gestionar Mantenimientos */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -236,14 +236,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         mantenimiento</a> -->
                     <a href="programar mantenimiento.php">Programar mantenimiento</a>
 
-                    <a href="historialMantenimientos.php">Historial de mantenimientos</a>
+                    <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>
                 </div>
             </li>
             <li class="dropdown">
                 <a href="#" style="color: inherit; text-decoration: none;">REPORTES</a>
                 <div class="dropdown-content">
                     <a href="generarReportes.php">Generar Reportes</a>
-                    <a href="mostrarReportes.php">Mostrar Reportes</a>
+                    <a href="mostrarReportes.php">Gestionar Reportes</a>
                 </div>
             </li>
             <li class="dropdown">
