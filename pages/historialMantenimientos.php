@@ -235,8 +235,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
                         mantenimiento</a> -->
                     <a href="programar mantenimiento.php">Programar mantenimiento</a>
-                    <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>}
-                    <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
+                    <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>
                 </div>
             </li>
             <li class="dropdown">
@@ -244,6 +243,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="dropdown-content">
                     <a href="generarReportes.php">Generar Reportes</a>
                     <a href="mostrarReportes.php">Gestionar Reportes</a>
+                    <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
                 </div>
             </li>
             <li class="dropdown">
