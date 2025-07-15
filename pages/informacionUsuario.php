@@ -1,11 +1,54 @@
 <?php
-// Conexión a la BD
+session_start();
 $connection = new mysqli("localhost", "root", "", "mantenimientobd");
 if ($connection->connect_error) {
     die("Conexión fallida: " . $connection->connect_error);
 }
 
-// Obtener el valor de búsqueda si existe
+// Eliminar o redirigir a editar
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['eliminar'])) {
+    if (isset($_POST['seleccion'])) {
+        $idUsuario = intval($_POST['seleccion']);
+
+        // Primero eliminar mantenimientos relacionados (y sus reportes si aplican)
+        $connection->begin_transaction();
+        try {
+            // Eliminar reportes de mantenimientos del usuario
+            $connection->query("DELETE FROM reporte WHERE id_mantenimiento IN (
+                SELECT id_mantenimiento FROM mantenimiento WHERE id_usuario = $idUsuario
+            )");
+
+            // Eliminar mantenimientos del usuario
+            $connection->query("DELETE FROM mantenimiento WHERE id_usuario = $idUsuario");
+
+            // Finalmente eliminar el usuario
+            $connection->query("DELETE FROM usuario WHERE id_usuario = $idUsuario");
+
+            $connection->commit();
+            $_SESSION['mensaje_exito'] = "✅ Usuario y sus mantenimientos eliminados.";
+            header("Location: informacionUsuario.php");
+            exit;
+        } catch (Exception $e) {
+            $connection->rollback();
+            echo "❌ Error al eliminar: " . $e->getMessage();
+        }
+    } else {
+        echo "❌ Selecciona un usuario para eliminar.";
+    }
+}
+
+// Redireccionar a editar
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editar'])) {
+    if (isset($_POST['seleccion'])) {
+        $idUsuario = intval($_POST['seleccion']);
+        header("Location: editarUsuario.php?id=$idUsuario");
+        exit;
+    } else {
+        echo "<script>alert('❌ Selecciona un usuario para editar.');</script>";
+    }
+}
+
+// Buscar usuarios
 $busqueda = "";
 if (isset($_GET['buscar'])) {
     $busqueda = $connection->real_escape_string($_GET['buscar']);
@@ -13,11 +56,12 @@ if (isset($_GET['buscar'])) {
 } else {
     $sql = "SELECT * FROM usuario";
 }
-
 $resultado = $connection->query($sql);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,57 +73,62 @@ $resultado = $connection->query($sql);
     <script src="../scripts/modalUsuario.js" defer></script>
     <style>
         /* Estilos para el menú despleegable */
-    .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #2c3e50;  
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    top: 100%; /* Esto haace quee eel menú aparezca justo debajo del botón */
-    left: 0;
-    margin-top: 0; /* Elimina ualquier margen superior */
-    }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #2c3e50;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            top: 100%;
+            /* Esto haace quee eel menú aparezca justo debajo del botón */
+            left: 0;
+            margin-top: 0;
+            /* Elimina ualquier margen superior */
+        }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-    height: 100%; /* Asegura que ocupe todo el alto del navbar */
-}
-        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            height: 100%;
+            /* Asegura que ocupe todo el alto del navbar */
+        }
+
         .dropdown-content a {
             color: white;
             padding: 12px 16px;
             text-decoration: none;
             display: block;
         }
-        
+
         .dropdown-content a:hover {
             background-color: #34495e;
         }
-        
+
         .dropdown:hover .dropdown-content {
             display: block;
         }
-        
+
         .navbar-menu li {
             padding: 0 15px;
             cursor: pointer;
-            height: 100%; /* Ocupa todo el alto del navbar */
+            height: 100%;
+            /* Ocupa todo el alto del navbar */
             display: flex;
             align-items: center;
             transition: background-color 0.3s;
-            position: relative; /* Necesario para el posicionamiento del dropdown */
+            position: relative;
+            /* Necesario para el posicionamiento del dropdown */
         }
 
-            /* ==================== INFORMACIÓN DE USUARIO ==================== */
+        /* ==================== INFORMACIÓN DE USUARIO ==================== */
         .userContainer {
-            position: fixed;        
-            top: 50%;                 
-            left: 50%;                
+            position: fixed;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
             background-color: #233241;
-            z-index: 1000;         
+            z-index: 1000;
             border-radius: 8px;
             width: 410px;
             height: 250px;
@@ -157,14 +206,14 @@ $resultado = $connection->query($sql);
         .dropdown button:hover {
             background-color: #3d566e;
         }
-        
     </style>
 </head>
+
 <body>
-	<!-- Barra de navegación horizontal -->
+    <!-- Barra de navegación horizontal -->
     <script src="../scripts/notificaciones.js" defer></script>
-	<link rel="stylesheet" href="../Styles/estiloGeneral.css" />
-	
+    <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
+
     <nav class="navbar">
         <div class="navbar-brand">Dashboard de Mantenimiento</div>
         <ul class="navbar-menu">
@@ -204,10 +253,10 @@ $resultado = $connection->query($sql);
         </ul>
         <div class="navbar-notifications">
             <button class="notification-btn" onclick="toggleDropdown()">
-            Notificaciones <span id="notification-badge" class="badge">0</span>
+                Notificaciones <span id="notification-badge" class="badge">0</span>
             </button>
             <div class="notification-dropdown" id="dropdown">
-            <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
+                <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
             </div>
         </div>
     </nav>
@@ -236,42 +285,40 @@ $resultado = $connection->query($sql);
         </div>
         <div>
             <table class="user-table">
-                <thead class="user-table-header">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Correo Electrónico</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody class="user-table-body">
-                    <?php
-                    if ($resultado->num_rows > 0) {
-                        while($row = $resultado->fetch_assoc()) {
-                            $nombreCompleto = $row['nombreUsuario'] . " " . $row['apellidoP'] . " " . $row['apellidoM'];
-                            $correo = $row['correo'];
-                            $estado = 1;
-                            
-                            // Determinar color de estado
-                            $colorClase = "";
-                            if ($estado == 1) {
-                                $colorClase = "status-green";
-                            } elseif ($estado == 0) {
-                                $colorClase = "status-red";
-                            } else {
-                                $colorClase = "status-yellow";
-                            }
+                <form method="POST" action="">
+                    <table class="user-table">
+                        <thead class="user-table-header">
+                            <tr>
+                                <th></th>
+                                <th>Nombre</th>
+                                <th>Correo Electrónico</th>
+                            </tr>
+                        </thead>
+                        <tbody class="user-table-body">
+                            <?php
+                            if ($resultado->num_rows > 0) {
+                                while ($row = $resultado->fetch_assoc()) {
+                                    $nombreCompleto = $row['nombreUsuario'] . " " . $row['apellidoP'] . " " . $row['apellidoM'];
+                                    $correo = $row['correo'];
 
-                            echo "<tr>
-                                <td>$nombreCompleto</td>
-                                <td>$correo</td>
-                                <td><span class='status-circle $colorClase'></span></td>
-                            </tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='3'>No se encontraron usuarios.</td></tr>";
-                    }
-                    ?>
-                </tbody>
+                                    echo "<tr>";
+                                    echo "<td><input type='radio' name='seleccion' value='{$row['id_usuario']}'></td>";
+                                    echo "<td>" . htmlspecialchars($nombreCompleto) . "</td>";
+                                    echo "<td>" . htmlspecialchars($correo) . "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='3'>No se encontraron usuarios.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 15px;">
+                        <button type="submit" name="eliminar" class="btt-info" onclick="return confirm('¿Estás seguro de eliminar este usuario?')">Eliminar</button>
+                        <button type="submit" name="editar" class="btt-info">Editar</button>
+                    </div>
+                </form>
+
             </table>
         </div>
     </div>
@@ -333,4 +380,5 @@ $resultado = $connection->query($sql);
         btnCerrarSesion.addEventListener('click', cerrarSesion);
     </script>
 </body>
+
 </html>
