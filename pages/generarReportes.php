@@ -115,14 +115,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <a>MANTENIMIENTOS</a>
                     <div class="dropdown-content">
                         <a href="programar mantenimiento.php">Programar mantenimiento</a>
-                        <a href="historialMantenimientos.php">Historial de mantenimientos</a>
+                        <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>
                     </div>
                 </li>
                 <li class="dropdown">
                     <a href="#">REPORTES</a>
                     <div class="dropdown-content">
                         <a href="generarReportes.php">Generar Reportes</a>
-                        <a href="mostrarReportes.php">Mostrar Reportes</a>
+                        <a href="mostrarReportes.php">Gestionar Reportes</a>
                     </div>
                 </li>
                 <li class="dropdown">
