@@ -55,7 +55,69 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   <script src="../scripts/modalUsuario.js" defer></script>
   <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
 
-  
+  <style>
+    .form-container {
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      width: 60%;
+      margin: 30px auto;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group button[type="submit"] {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+      display: block;
+      width: 100%;
+    }
+
+    .form-group button[type="submit"]:hover {
+      background-color: #2980b9;
+    }
+  </style>
+
 
   <nav class="navbar">
     <div class="navbar-brand">Dashboard de Mantenimiento</div>
@@ -117,28 +179,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   </div>
 
   <!-- Contenido principal -->
-  <div class="container">
+  <div class="form-container">
     <h2>Editar Mantenimiento</h2>
     <form method="POST">
-      <label>Fecha programada:</label>
-      <input type="date" name="fecha_programada" value="<?= $mantenimiento['fecha_programada'] ?>"><br>
+      <div class="form-group">
+        <label for="fecha">Fecha programada:</label>
+        <input type="date" name="fecha_programada" id="fecha" value="<?= $mantenimiento['fecha_programada'] ?>">
+      </div>
 
-      <label>Tipo de tarea:</label>
-      <input type="text" name="tipo_tarea" value="<?= $mantenimiento['tipo_tarea'] ?>"><br>
+      <div class="form-group">
+        <label for="tarea">Tipo de tarea:</label>
+        <input type="text" name="tipo_tarea" id="tarea" value="<?= $mantenimiento['tipo_tarea'] ?>">
+      </div>
 
-      <label>Comentario:</label>
-      <textarea name="comentario"><?= $mantenimiento['comentario'] ?></textarea><br>
+      <div class="form-group">
+        <label for="comentario">Comentario:</label>
+        <textarea name="comentario" id="comentario"><?= $mantenimiento['comentario'] ?></textarea>
+      </div>
 
-      <label>Estado:</label>
-      <select name="estado">
-        <option value="Pendiente" <?= $mantenimiento['estado'] === 'Pendiente' ? 'selected' : '' ?>>Pendiente</option>
-        <option value="En proceso" <?= $mantenimiento['estado'] === 'En proceso' ? 'selected' : '' ?>>En proceso</option>
-        <option value="Completado" <?= $mantenimiento['estado'] === 'Completado' ? 'selected' : '' ?>>Completado</option>
-      </select><br>
+      <div class="form-group">
+        <label for="estado">Estado:</label>
+        <select name="estado" id="estado">
+          <option value="Pendiente" <?= $mantenimiento['estado'] === 'Pendiente' ? 'selected' : '' ?>>Pendiente</option>
+          <option value="En proceso" <?= $mantenimiento['estado'] === 'En proceso' ? 'selected' : '' ?>>En proceso</option>
+          <option value="Completado" <?= $mantenimiento['estado'] === 'Completado' ? 'selected' : '' ?>>Completado</option>
+        </select>
+      </div>
 
-      <button type="submit">Guardar cambios</button>
+      <div class="form-group">
+        <button type="submit">Guardar cambios</button>
+      </div>
     </form>
   </div>
+
 </body>
 
 </html>
