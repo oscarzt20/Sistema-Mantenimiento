@@ -9,11 +9,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-header('Content-Type: application/json');
 $response = ['success' => false, 'message' => ''];
 
 // --- GET Request: Fetch Reports ---
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'get_reports') {
+    header('Content-Type: application/json');
+
     $reports = [];
     // Join with mantenimiento table to display related maintenance info
     $query = "SELECT r.id_reporte, r.fecha_creacion, r.tipo_reporte, r.contenido, m.fecha_programada, m.tipo_tarea
@@ -35,7 +36,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
 
 // --- POST Request: Handle Delete and Update ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // To support both application/json and form submissions,
+    // we check input type:
     $data = json_decode(file_get_contents('php://input'), true);
+    if (!$data) {
+        // fallback if not json:
+        $data = $_POST;
+    }
+
+    if (isset($data['action'])) {
+        header('Content-Type: application/json');
+    }
+
     $action = $data['action'] ?? '';
 
     if ($action === 'delete') {
@@ -107,18 +119,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
+
+// Si no es ninguna petición AJAX con action, se muestra el HTML normal:
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Aplicación Web de Mantenimiento</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../Styles/estiloEditarEliminarReportes.css">
-    <link rel="stylesheet" href="../Styles/estiloGeneral.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="../Styles/estiloEditarEliminarReportes.css" />
+    <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
     <script src="../scripts/editarEliminarReportes.js" defer></script>
     <script src="../scripts/notificaciones.js" defer></script>
     <script src="../scripts/modalUsuario.js" defer></script>
@@ -207,11 +222,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <span class="close-button">&times;</span>
             <h3 class="text-lg font-semibold mb-4">Editar Reporte</h3>
             <form id="editReportForm" class="space-y-4">
-                <input type="hidden" id="editReportId">
+                <input type="hidden" id="editReportId" />
                 <div>
                     <label for="editTipoReporte" class="block text-sm font-medium mb-1">Tipo de Reporte</label>
                     <input type="text" id="editTipoReporte" name="tipoReporte"
-                        class="w-full p-2 rounded-md border border-gray-300" required>
+                        class="w-full p-2 rounded-md border border-gray-300" required />
                 </div>
                 <div>
                     <label for="editContenidoReporte" class="block text-sm font-medium mb-1">Contenido del Reporte</label>
@@ -221,14 +236,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div>
                     <label for="editFechaCreacionReporte" class="block text-sm font-medium mb-1">Fecha de Creación</label>
                     <input type="date" id="editFechaCreacionReporte" name="fechaCreacionReporte"
-                        class="w-full p-2 rounded-md border border-gray-300" required>
+                        class="w-full p-2 rounded-md border border-gray-300" required />
                 </div>
                 <div class="flex justify-end space-x-4 mt-6">
                     <button type="submit"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md">
                         Guardar Cambios
                     </button>
-                    <button type="button" class="close-button bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-md">
+                    <button type="button"
+                        class="close-button bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-md">
                         Cancelar
                     </button>
                 </div>
