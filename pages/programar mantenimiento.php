@@ -311,70 +311,70 @@ $connection->close();
     </style>
 </head>
 
-<body>  
-  <!-- Barra de navegación horizontal -->
-  <script src="../scripts/notificaciones.js" defer></script>
-  <script src="../scripts/modalUsuario.js" defer></script>
-  <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
+<body>
+    <!-- Barra de navegación horizontal -->
+    <script src="../scripts/notificaciones.js" defer></script>
+    <script src="../scripts/modalUsuario.js" defer></script>
+    <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
 
-  <nav class="navbar">
-    <div class="navbar-brand">Dashboard de Mantenimiento</div>
-    <ul class="navbar-menu">
-      <li><a href="dashboard.php" style="color: inherit; text-decoration: none;">INICIO</a></li>
-      <li class="dropdown">
-        <a href="#" style="color: inherit; text-decoration: none;">EQUIPOS</a>
-        <div class="dropdown-content">
-          <a href="registroEquipos.html">Registrar Equipo</a>
-          <a href="editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
-        </div>
-      </li>
-      <li class="dropdown">
-        <a>MANTENIMIENTOS</a>
-        <div class="dropdown-content">
-          <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
+    <nav class="navbar">
+        <div class="navbar-brand">Dashboard de Mantenimiento</div>
+        <ul class="navbar-menu">
+            <li><a href="dashboard.php" style="color: inherit; text-decoration: none;">INICIO</a></li>
+            <li class="dropdown">
+                <a href="#" style="color: inherit; text-decoration: none;">EQUIPOS</a>
+                <div class="dropdown-content">
+                    <a href="registroEquipos.html">Registrar Equipo</a>
+                    <a href="editarEliminarEquipos.php">Editar/Eliminar Equipo</a>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a>MANTENIMIENTOS</a>
+                <div class="dropdown-content">
+                    <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
                         mantenimiento</a> -->
-          <a href="programar mantenimiento.php">Programar mantenimiento</a>
-
-          <a href="historialMantenimientos.php">Gestionar mantenimientos</a>
+                    <a href="programar mantenimiento.php">Programar mantenimiento</a>
+                    <a href="historialMantenimientos.php">Gestionar mantenimientos</a>
+                    <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a href="#" style="color: inherit; text-decoration: none;">REPORTES</a>
+                <div class="dropdown-content">
+                    <a href="generarReportes.php">Generar Reportes</a>
+                    <a href="mostrarReportes.php">Mostrar Reportes</a>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a>USUARIOS</a>
+                <div class="dropdown-content">
+                    <!-- <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>  -->
+                    <a href="informacionUsuario.php">Gestionar Usuarios</a>
+                    <button class="btt-info" id="cerrarSesion">Cerrar sesión</button>
+                </div>
+            </li>
+        </ul>
+        <div class="navbar-notifications">
+            <button class="notification-btn" onclick="toggleDropdown()">
+                Notificaciones <span id="notification-badge" class="badge">0</span>
+            </button>
+            <div class="notification-dropdown" id="dropdown">
+                <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
+            </div>
         </div>
-      </li>
-      <li class="dropdown">
-        <a href="#" style="color: inherit; text-decoration: none;">REPORTES</a>
-        <div class="dropdown-content">
-          <a href="generarReportes.php">Generar Reportes</a>
-          <a href="mostrarReportes.php">Mostrar Reportes</a>
-        </div>
-      </li>
-      <li class="dropdown">
-        <a>USUARIOS</a>
-        <div class="dropdown-content">
-          <!-- <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>  -->
-          <a href="informacionUsuario.php">Gestionar Usuarios</a>
-          <button class="btt-info" id="cerrarSesion">Cerrar sesión</button>
-        </div>
-      </li>
-    </ul>
-    <div class="navbar-notifications">
-      <button class="notification-btn" onclick="toggleDropdown()">
-        Notificaciones <span id="notification-badge" class="badge">0</span>
-      </button>
-      <div class="notification-dropdown" id="dropdown">
-        <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
-      </div>
-    </div>
-  </nav>
-  <div class="userContainer oculto">
-    <button id="btt-cerrarInfo">x</button>
-    <nav class="userInfo">
-      <img src="../img/persona.jpg" id="img-user" alt="Usuario">
-      <p class="p-info" id="info-nombre">Nombre</p>
-      <p class="p-info" id="info-correo">Correo Electrónico</p>
-      <p class="p-info" id="info-estado">Estado</p>
-      <p class="p-info" id="info-rol">Rol</p>
     </nav>
-    <button class="btt-info" id="btt-cambiarCuenta">Cambiar cuenta</button>
-    <button class="btt-info" id="btt-cerrarSesion">Cerrar sesión</button>
-  </div>
+    <div class="userContainer oculto">
+        <button id="btt-cerrarInfo">x</button>
+        <nav class="userInfo">
+            <img src="../img/persona.jpg" id="img-user" alt="Usuario">
+            <p class="p-info" id="info-nombre">Nombre</p>
+            <p class="p-info" id="info-correo">Correo Electrónico</p>
+            <p class="p-info" id="info-estado">Estado</p>
+            <p class="p-info" id="info-rol">Rol</p>
+        </nav>
+        <button class="btt-info" id="btt-cambiarCuenta">Cambiar cuenta</button>
+        <button class="btt-info" id="btt-cerrarSesion">Cerrar sesión</button>
+    </div>
     <div class="container">
         <div class="row">
             <div class="card1">

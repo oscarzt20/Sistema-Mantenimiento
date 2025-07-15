@@ -231,8 +231,8 @@ $resultado = $connection->query($sql);
                     <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
                         mantenimiento</a> -->
                     <a href="programar mantenimiento.php">Programar mantenimiento</a>
-
                     <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>
+                    <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
                 </div>
             </li>
             <li class="dropdown">

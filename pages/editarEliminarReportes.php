@@ -164,6 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="dropdown-content">
                         <a href="generarReportes.php">Generar Reportes</a>
                         <a href="mostrarReportes.php">Mostrar Reportes</a>
+                        <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
                     </div>
                 </li>
                 <li class="dropdown">

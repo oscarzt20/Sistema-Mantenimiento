@@ -178,7 +178,6 @@ $conn->close();
     <link rel="stylesheet" href="/Styles/mostrarReportes.css">
     <link rel="stylesheet" href="/Styles/estiloGeneral.css">
     <style>
-
         /* Custom Modal Styles */
         .custom-modal-backdrop {
             position: fixed;
@@ -402,7 +401,7 @@ $conn->close();
         <!-- Barra de navegación horizontal -->
         <script src="../scripts/notificaciones.js" defer></script>
         <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
-	
+
         <nav class="navbar">
             <div class="navbar-brand">Dashboard de Mantenimiento</div>
             <ul class="navbar-menu">
@@ -420,8 +419,8 @@ $conn->close();
                         <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
                             mantenimiento</a> -->
                         <a href="programar mantenimiento.php">Programar mantenimiento</a>
-
                         <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>
+                        <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
                     </div>
                 </li>
                 <li class="dropdown">
@@ -442,25 +441,25 @@ $conn->close();
             </ul>
             <div class="navbar-notifications">
                 <button class="notification-btn" onclick="toggleDropdown()">
-                Notificaciones <span id="notification-badge" class="badge">0</span>
+                    Notificaciones <span id="notification-badge" class="badge">0</span>
                 </button>
                 <div class="notification-dropdown" id="dropdown">
-                <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
+                    <div id="noNotifications" class="no-notifications">No hay notificaciones.</div>
                 </div>
             </div>
         </nav>
-    <div class="userContainer oculto">
-        <button id="btt-cerrarInfo">x</button>
-        <nav class="userInfo">
-            <img src="../img/persona.jpg" id="img-user" alt="Usuario">
-            <p class="p-info" id="info-nombre">Nombre</p>
-            <p class="p-info" id="info-correo">Correo Electrónico</p>
-            <p class="p-info" id="info-estado">Estado</p>
-            <p class="p-info" id="info-rol">Rol</p>
-        </nav>
-        <button class="btt-info" id="btt-cambiarCuenta">Cambiar cuenta</button>
-        <button class="btt-info" id="btt-cerrarSesion">Cerrar sesión</button>
-    </div>
+        <div class="userContainer oculto">
+            <button id="btt-cerrarInfo">x</button>
+            <nav class="userInfo">
+                <img src="../img/persona.jpg" id="img-user" alt="Usuario">
+                <p class="p-info" id="info-nombre">Nombre</p>
+                <p class="p-info" id="info-correo">Correo Electrónico</p>
+                <p class="p-info" id="info-estado">Estado</p>
+                <p class="p-info" id="info-rol">Rol</p>
+            </nav>
+            <button class="btt-info" id="btt-cambiarCuenta">Cambiar cuenta</button>
+            <button class="btt-info" id="btt-cerrarSesion">Cerrar sesión</button>
+        </div>
     </header>
 
     <main class="flex-grow container mx-auto p-6 flex flex-col items-center justify-start">

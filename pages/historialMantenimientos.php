@@ -235,8 +235,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
                         mantenimiento</a> -->
                     <a href="programar mantenimiento.php">Programar mantenimiento</a>
-
-                    <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>
+                    <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>}
+                    <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
                 </div>
             </li>
             <li class="dropdown">
@@ -283,7 +283,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <?php if (isset($_SESSION['mensaje_exito'])): ?>
             <div class="alert-success" id="mensaje-exito">
-                <?= $_SESSION['mensaje_exito']; unset($_SESSION['mensaje_exito']); ?>
+                <?= $_SESSION['mensaje_exito'];
+                unset($_SESSION['mensaje_exito']); ?>
             </div>
         <?php endif; ?>
 
@@ -305,16 +306,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($result->num_rows > 0):
                     while ($row = $result->fetch_assoc()):
                 ?>
-                    <tr>
-                        <td><input type="radio" name="seleccion" value="<?= $row['id_mantenimiento'] ?>"></td>
-                        <td><?= htmlspecialchars($row['id_mantenimiento']) ?></td>
-                        <td><?= htmlspecialchars($row['fecha_programada']) ?></td>
-                        <td><?= htmlspecialchars($row['tipo_tarea']) ?></td>
-                        <td><?= htmlspecialchars($row['comentario']) ?></td>
-                        <td><?= htmlspecialchars($row['estado']) ?></td>
-                        <td><?= htmlspecialchars($row['id_equipo']) ?></td>
-                        <td><?= htmlspecialchars($row['id_usuario']) ?></td>
-                    </tr>
+                        <tr>
+                            <td><input type="radio" name="seleccion" value="<?= $row['id_mantenimiento'] ?>"></td>
+                            <td><?= htmlspecialchars($row['id_mantenimiento']) ?></td>
+                            <td><?= htmlspecialchars($row['fecha_programada']) ?></td>
+                            <td><?= htmlspecialchars($row['tipo_tarea']) ?></td>
+                            <td><?= htmlspecialchars($row['comentario']) ?></td>
+                            <td><?= htmlspecialchars($row['estado']) ?></td>
+                            <td><?= htmlspecialchars($row['id_equipo']) ?></td>
+                            <td><?= htmlspecialchars($row['id_usuario']) ?></td>
+                        </tr>
                 <?php
                     endwhile;
                 else:
@@ -332,8 +333,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         const form = document.getElementById("formMantenimiento");
         const btnEliminar = document.getElementById("btnEliminar");
         const radios = document.querySelectorAll("input[type='radio'][name='seleccion']");
-        
-        form.addEventListener("submit", function (e) {
+
+        form.addEventListener("submit", function(e) {
             const seleccionado = [...radios].some(r => r.checked);
             if (!seleccionado) {
                 alert("Debes seleccionar un mantenimiento.");
