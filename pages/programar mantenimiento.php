@@ -335,7 +335,7 @@ $connection->close();
                         mantenimiento</a> -->
           <a href="programar mantenimiento.php">Programar mantenimiento</a>
 
-          <a href="historialMantenimientos.php">Historial de mantenimientos</a>
+          <a href="historialMantenimientos.php">Gestionar mantenimientos</a>
         </div>
       </li>
       <li class="dropdown">
@@ -458,15 +458,6 @@ $connection->close();
 
             if (notificationBtn) {
                 notificationBtn.addEventListener('click', toggleNotificationDropdown);
-            }
-
-            // Placeholder for "Cerrar sesión" functionality
-            if (cerrarSesionBtn) {
-                cerrarSesionBtn.addEventListener('click', () => {
-                    alert('Cerrando sesión... (Funcionalidad de cierre de sesión real no implementada en este demo)');
-                    // In a real application, this would send a request to a logout.php script
-                    // Example: window.location.href = 'logout.php';
-                });
             }
 
             // Client-side form validation (optional, but good practice)
