@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Bind parameters:
         // s = string, i = integer, d = double (for float)
         // Here: ssssid (fecha, tipo_tarea, comentario, estado are strings, id_equipo, id_usuario are integers)
-        $stmt->bind_param("sssisd", $fecha, $tipo_tarea, $comentario, $estado, $id_equipo, $id_usuario);
+        $stmt->bind_param("ssssii", $fecha, $tipo_tarea, $comentario, $estado, $id_equipo, $id_usuario);
 
         // Execute the statement
         if ($stmt->execute()) {
