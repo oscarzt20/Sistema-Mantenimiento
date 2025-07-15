@@ -420,7 +420,6 @@ $conn->close();
                             mantenimiento</a> -->
                         <a href="programar mantenimiento.php">Programar mantenimiento</a>
                         <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>
-                        <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
                     </div>
                 </li>
                 <li class="dropdown">
@@ -428,6 +427,7 @@ $conn->close();
                     <div class="dropdown-content">
                         <a href="generarReportes.php">Generar Reportes</a>
                         <a href="mostrarReportes.php">Gestionar Reportes</a>
+                        <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
                     </div>
                 </li>
                 <li class="dropdown">

@@ -17,23 +17,20 @@ if ($conn->connect_error) {
 
 $equipo = null;
 $ubicacion = null;
-$estado = null;
 
 // Manejar el envío del formulario para buscar/cargar datos del equipo
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search_id_equipo'])) {
     $id_equipo_search = $_POST['search_id_equipo'];
 
     // Preparar y ejecutar la consulta SQL para obtener los detalles del equipo
-    $stmt = $conn->prepare("SELECT e.*, u.nombreUbicacion, u.piso, s.estadoEquipos FROM equipo e JOIN ubicacion u ON e.id_ubicacion = u.id_ubicacion JOIN estado s ON e.id_estado = s.id_estado WHERE e.id_equipo = ?");
+    $stmt = $conn->prepare("SELECT e.*, u.nombreUbicacion, u.piso FROM equipo e JOIN ubicacion u ON e.id_ubicacion = u.id_ubicacion WHERE e.id_equipo = ?");
     $stmt->bind_param("i", $id_equipo_search);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $equipo = $result->fetch_assoc();
-        // Obtener la ubicación y el estado por separado si es necesario, pero ya están unidos
         $ubicacion = ['nombreUbicacion' => $equipo['nombreUbicacion'], 'piso' => $equipo['piso']];
-        $estado = ['estadoEquipos' => $equipo['estadoEquipos']];
     } else {
         $equipo = null; // No se encontró ningún equipo
     }
@@ -44,12 +41,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search_id_equipo'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_equipo'])) {
     $id_equipo_update = $_POST['id_equipo'];
     $nombreEquipo = $_POST['nombreEquipo'];
-    $tipoEquipo = $_POST['tipoEquipo']; // Asumiendo que 'tipoEquipo' se pasa desde el formulario
+    $tipoEquipo = $_POST['tipoEquipo'];
     $numeroSerie = $_POST['numeroSerie'];
     $fechaIngreso = $_POST['fechaIngreso'];
     $descripcion = $_POST['descripcion'];
-    $nombreUbicacion = $_POST['nombreUbicacion']; // Nuevo campo para el nombre de la ubicación
-    $estadoEquipos = $_POST['estadoEquipos']; // Nuevo campo para el nombre del estado
+    $nombreUbicacion = $_POST['nombreUbicacion'];
 
     // Primero, obtener id_ubicacion de nombreUbicacion
     $stmt_ubicacion = $conn->prepare("SELECT id_ubicacion FROM ubicacion WHERE nombreUbicacion = ?");
@@ -62,32 +58,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_equipo'])) {
     }
     $stmt_ubicacion->close();
 
-    // Luego, obtener id_estado de estadoEquipos
-    $stmt_estado = $conn->prepare("SELECT id_estado FROM estado WHERE estadoEquipos = ?");
-    $stmt_estado->bind_param("s", $estadoEquipos);
-    $stmt_estado->execute();
-    $result_estado = $stmt_estado->get_result();
-    $id_estado = null;
-    if ($row_estado = $result_estado->fetch_assoc()) {
-        $id_estado = $row_estado['id_estado'];
-    }
-    $stmt_estado->close();
-
-    if ($id_ubicacion !== null && $id_estado !== null) {
-        $stmt = $conn->prepare("UPDATE equipo SET nombreEquipo = ?, tipoEquipo = ?, numeroSerie = ?, fechaIngreso = ?, descripcion = ?, id_ubicacion = ?, id_estado = ? WHERE id_equipo = ?");
-        $stmt->bind_param("sssssiii", $nombreEquipo, $tipoEquipo, $numeroSerie, $fechaIngreso, $descripcion, $id_ubicacion, $id_estado, $id_equipo_update);
+    if ($id_ubicacion !== null) {
+        $stmt = $conn->prepare("UPDATE equipo SET nombreEquipo = ?, tipoEquipo = ?, numeroSerie = ?, fechaIngreso = ?, descripcion = ?, id_ubicacion = ? WHERE id_equipo = ?");
+        $stmt->bind_param("sssssii", $nombreEquipo, $tipoEquipo, $numeroSerie, $fechaIngreso, $descripcion, $id_ubicacion, $id_equipo_update);
 
         if ($stmt->execute()) {
             echo "<script>alert('Equipo actualizado exitosamente!');</script>";
-            // Volver a obtener los datos después de la actualización para refrescar el formulario
-            header("Location: editarEliminarEquipos.php?id=" . $id_equipo_update); // Redirigir para mostrar los datos actualizados
+            header("Location: editarEliminarEquipos.php?id=" . $id_equipo_update);
             exit();
         } else {
             echo "<script>alert('Error al actualizar el equipo: " . $stmt->error . "');</script>";
         }
         $stmt->close();
     } else {
-        echo "<script>alert('Error: Ubicación o Estado no encontrados. Por favor, asegúrese de que existan en la base de datos.');</script>";
+        echo "<script>alert('Error: Ubicación no encontrada. Por favor, asegúrese de que exista en la base de datos.');</script>";
     }
 }
 
@@ -163,18 +147,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_equipo'])) {
     }
 }
 
-// Obtener todas las ubicaciones y estados para los menús desplegables
+// Obtener todas las ubicaciones para el menú desplegable
 $ubicaciones = [];
 $result_ubicaciones = $conn->query("SELECT id_ubicacion, nombreUbicacion, piso FROM ubicacion");
 while ($row = $result_ubicaciones->fetch_assoc()) {
     $ubicaciones[] = $row;
 }
 
-$estados = [];
-$result_estados = $conn->query("SELECT id_estado, estadoEquipos FROM estado");
-while ($row = $result_estados->fetch_assoc()) {
-    $estados[] = $row;
-}
+// Lista de tipos de equipo según la imagen
+$tiposEquipo = [
+    "Seleccione un tipo de equipo",
+    "Computo",
+    "Impresión y escaneo",
+    "Redes",
+    "Periféricos",
+    "Audiovisual",
+    "Seguridad",
+    "Telefonía",
+    "Energía",
+    "Móvil"
+];
 
 $conn->close();
 ?>
@@ -194,7 +186,6 @@ $conn->close();
 <body class="bg-[#f5f5f5] text-[#333] min-h-screen flex flex-col">
 
     <header class="bg-[#2c3e50] text-white p-4 shadow-md">
-        <!-- Barra de navegación horizontal -->
         <script src="../scripts/notificaciones.js" defer></script>
         <script src="../scripts/modalUsuario.js" defer></script>
         <link rel="stylesheet" href="../Styles/estiloGeneral.css" />
@@ -213,11 +204,8 @@ $conn->close();
                 <li class="dropdown">
                     <a>MANTENIMIENTOS</a>
                     <div class="dropdown-content">
-                        <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
-                            mantenimiento</a> -->
                         <a href="programar mantenimiento.php">Programar mantenimiento</a>
                         <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>
-                        <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
                     </div>
                 </li>
                 <li class="dropdown">
@@ -225,12 +213,12 @@ $conn->close();
                     <div class="dropdown-content">
                         <a href="generarReportes.php">Generar Reportes</a>
                         <a href="mostrarReportes.php">Gestionar Reportes</a>
+                        <a href="editarEliminarReportes.php">Editar/Eliminar Reportes</a>
                     </div>
                 </li>
                 <li class="dropdown">
                     <a>USUARIOS</a>
                     <div class="dropdown-content">
-                        <!-- <a href="Pantalla 12.html" style="color: inherit; text-decoration: none;">Registro de Usuarios</a>  -->
                         <a href="informacionUsuario.php">Gestionar Usuarios</a>
                         <button class="btt-info" id="cerrarSesion">Cerrar sesión</button>
                     </div>
@@ -265,7 +253,6 @@ $conn->close();
                 <h2 class="text-3xl font-semibold text-[#333] mb-4 rounded">Editar o eliminar equipos</h2>
             </div>
 
-            <!-- Formulario de búsqueda -->
             <form method="POST" action="editarEliminarEquipos.php" class="mb-8">
                 <div class="flex items-center space-x-4">
                     <label for="search-id-equipo" class="block text-lg font-medium text-gray-700">Buscar por ID de Equipo:</label>
@@ -280,7 +267,6 @@ $conn->close();
             </form>
 
             <?php if ($equipo): ?>
-                <!-- Formulario de edición/eliminación (mostrado si se encuentra un equipo) -->
                 <form method="POST" action="editarEliminarEquipos.php">
                     <input type="hidden" name="id_equipo" value="<?php echo htmlspecialchars($equipo['id_equipo']); ?>">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -298,9 +284,15 @@ $conn->close();
                             </div>
                             <div>
                                 <label for="tipoEquipo" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Equipo</label>
-                                <input type="text" id="tipoEquipo" name="tipoEquipo" placeholder="String(100)"
-                                    value="<?php echo htmlspecialchars($equipo['tipoEquipo']); ?>"
+                                <select id="tipoEquipo" name="tipoEquipo"
                                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                    <?php foreach ($tiposEquipo as $tipo): ?>
+                                        <option value="<?php echo htmlspecialchars($tipo); ?>"
+                                            <?php echo (isset($equipo['tipoEquipo']) && $equipo['tipoEquipo'] == $tipo) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($tipo); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <div>
                                 <label for="numeroSerie" class="block text-sm font-medium text-gray-700 mb-1">No. de Serie</label>
@@ -308,6 +300,15 @@ $conn->close();
                                     value="<?php echo htmlspecialchars($equipo['numeroSerie']); ?>"
                                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
                             </div>
+                            <div>
+                                <label for="fechaIngreso" class="block text-sm font-medium text-gray-700 mb-1">Fecha de Ingreso</label>
+                                <input type="date" id="fechaIngreso" name="fechaIngreso" placeholder="YYYY-MM-DD"
+                                    value="<?php echo htmlspecialchars($equipo['fechaIngreso']); ?>"
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
                             <div>
                                 <label for="nombreUbicacion" class="block text-sm font-medium text-gray-700 mb-1">Locación</label>
                                 <select id="nombreUbicacion" name="nombreUbicacion"
@@ -325,44 +326,6 @@ $conn->close();
                                 <input type="text" id="descripcion" name="descripcion" placeholder="String(100)"
                                     value="<?php echo htmlspecialchars($equipo['descripcion']); ?>"
                                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                        </div>
-
-                        <div class="space-y-6">
-                            <div>
-                                <label for="estadoEquipos" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-                                <select id="estadoEquipos" name="estadoEquipos"
-                                    class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                                    <?php foreach ($estados as $est): ?>
-                                        <option value="<?php echo htmlspecialchars($est['estadoEquipos']); ?>"
-                                            <?php echo ($equipo['estadoEquipos'] == $est['estadoEquipos']) ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($est['estadoEquipos']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="fechaIngreso" class="block text-sm font-medium text-gray-700 mb-1">Fecha de Ingreso</label>
-                                <input type="date" id="fechaIngreso" name="fechaIngreso" placeholder="YYYY-MM-DD"
-                                    value="<?php echo htmlspecialchars($equipo['fechaIngreso']); ?>"
-                                    class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div
-                                class="mt-4 flex flex-col items-center p-6 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 bg-gray-50">
-                                <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                                <p id="file-upload-text">Arrastre y suelte una imagen aquí o</p>
-                                <input type="file" id="file-upload" class="hidden" accept="image/*">
-                                <button id="select-file-button" type="button"
-                                    class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                    Seleccionar archivo
-                                </button>
-                                <p class="text-xs mt-1">Sube la foto del equipo</p>
-                                <!-- Puedes mostrar la imagen actual aquí si está disponible -->
                             </div>
                         </div>
                     </div>
@@ -383,7 +346,6 @@ $conn->close();
                     </div>
                 </form>
 
-                <!-- Modal de Confirmación de Eliminación -->
                 <div id="deleteConfirmationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
                     <div class="relative mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                         <div class="mt-3 text-center">
@@ -409,13 +371,11 @@ $conn->close();
                 </div>
 
             <?php elseif ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search_id_equipo'])): ?>
-                <!-- Mensaje si no se encuentra el equipo -->
                 <p class="text-center text-red-500 text-lg">No se encontró ningún equipo con el ID proporcionado.</p>
             <?php endif; ?>
         </section>
     </main>
 
-    <!-- Script para la funcionalidad de JS -->
     <script src="/scripts/eliminarEditar.js"></script>
 </body>
 

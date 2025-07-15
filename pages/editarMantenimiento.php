@@ -136,7 +136,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <!-- <a href="reporte de mantenimiento.html" style="color: inherit; text-decoration: none;">Reporte de
                         mantenimiento</a> -->
           <a href="programar mantenimiento.php">Programar mantenimiento</a>
-
           <a href="historialMantenimientos.php">Gestionar Mantenimientos</a>
         </div>
       </li>
